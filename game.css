@@ -1,0 +1,250 @@
+#canvas-container {
+    width: 100vw; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    background-color: black;
+    border-radius: 0.5rem;
+}
+body { 
+    margin: 0; 
+    overflow: hidden; /* Prevent scrolling */
+}
+
+  #centerButton {
+    position: absolute;
+    top: 7%;
+    left: 97%;
+    transform: translate(-50%, -50%);
+    height: 70px;
+    width: 70px;
+    /* background-color: #007BFF; */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 10; /* Make sure the button is on top of other content */
+}
+#centerButton img{
+    height: 70px;
+    width: 70px;
+}
+#centerButton img:hover {
+    width: 75px;
+    height: 75px;
+}
+#scoreButton {
+    position: absolute;
+    top: 7%;
+    left: 8%;
+    transform: translate(-50%, -50%);
+    height: 55px;
+    width: 210px;
+    /* background-color: #007BFF; */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 10; /* Make sure the button is on top of other content */
+}
+#scoreButton img{
+    height: 55px;
+    width: 210px;
+}
+
+#livesButton {
+    position: absolute;
+    top: 20%;
+    left: 6%;
+    transform: translate(-50%, -50%);
+    height: 85px;
+    width: 85px;
+    /* background-color: #007BFF; */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 10; /* Make sure the button is on top of other content */
+}
+#livesButton img{
+    height: 85px;
+    width: 85px;
+}
+.scoreCount{
+    height: 50px;
+    width: 170px;
+    display: flex;
+    position: absolute;
+    z-index: 15;
+    top: -18px;
+    left: 40px;
+    font-size: 40px;
+    /* background-color: gray; */
+    color: white;
+}
+.clickable-image {
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: moveFromBottom1 1s ease-out forwards;
+}
+
+.clickable-image:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.modal1 {
+display: none;
+position: fixed;
+z-index: 1;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content1 {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background-color: rgba(0, 0, 0, 0.8);
+width: 300px;
+height: 260px;
+padding: 20px;
+border-radius: 10px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+text-align: center;
+}
+
+.leveldiv {
+height: 30%;
+    width: 100%;
+    background-color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15%;
+    font-size: 36px;
+    font-family: 'cursive';
+}
+
+/* Modal options buttons styling */
+.modal-options1 button {
+width: 100%;
+padding: 12px;
+font-size: 16px;
+background-color: #4CAF50;
+color: white;
+border: none;
+border-radius: 5px;
+margin-top: 10px;
+cursor: pointer;
+}
+
+.modal-options1 button:hover {
+background-color: #45a049;
+}
+
+
+.modal2 {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-content2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 300px;
+    height: 350px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    }
+    
+    .leveldiv2 {
+    height: 30%;
+        width: 100%;
+        background-color: gray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15%;
+        font-size: 36px;
+        font-family: 'cursive';
+    }
+    
+    
+
+    
+.gameEND{
+    height: 50px;
+    width: 50px;
+    display: flex;
+    position: absolute;
+    z-index: 17;
+    top: 150px;
+    left: 107px;
+    font-size: 20px;
+    /* background-color: gray; */
+    color: black;
+}
+
+
+
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 120px;
+    height: 26px;
+    display: grid;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    visibility: hidden; /* Initially hidden */
+}
+
+.loader.show {
+    visibility: visible; /* Make it visible when shown */
+}
+
+.loader:before,
+.loader:after {
+    content: "";
+    grid-area: 1/1;
+    --c: no-repeat linear-gradient(#d6d9da 0 0);
+    background: var(--c), var(--c), var(--c);
+    animation: l16-1 1.5s infinite linear, l16-2 1.5s infinite linear;
+    transform: scale(var(--s, 1)) translate(3px, -3px);
+}
+
+.loader:after {
+    --s: -1;
+}
+
+@keyframes l16-1 {
+    0%, 3% {background-size: 0 4px, 4px 0, 0 4px;}
+    16.67% {background-size: 100% 4px, 4px 0, 0 4px;}
+    33.33% {background-size: 100% 4px, 4px 100%, 0 4px;}
+    46%, 54% {background-size: 100% 4px, 4px 100%, 100% 4px;}
+    66.67% {background-size: 0 4px, 4px 100%, 100% 4px;}
+    83.33% {background-size: 0 4px, 4px 0, 100% 4px;}
+    96%, 100% {background-size: 0 4px, 4px 0, 0 4px;}
+}
+
+@keyframes l16-2 {
+    0%, 49.9% {background-position: 0 0, 100% 0, 100% 100%;}
+    50%, 100% {background-position: 100% 0, 100% 100%, 0 100%;}
+}
