@@ -12,8 +12,6 @@ window.onload = function() {
 };
 
 
-
-
 const audioElement = document.getElementById('backgroundAudio');
 
 // Function to check audio state and apply it
@@ -28,7 +26,7 @@ const checkAudioState = () => {
 
 // Check and set audio state on page load
 window.addEventListener('load', checkAudioState);
-       
+
 
 
 
@@ -42,11 +40,11 @@ const modal1 = document.getElementById("settingsModal1");
             playButton.classList.add("hidden");
         };
 
-        closeBtn1.onclick = () => {
-            modal1.style.display = "none";
-            titleImage.classList.remove("hidden");
-            playButton.classList.remove("hidden");
-        };
+        // closeBtn1.onclick = () => {
+        //     modal1.style.display = "none";
+        //     titleImage.classList.remove("hidden");
+        //     playButton.classList.remove("hidden");
+        // };
 
         window.onclick = (event) => {
             if (event.target == modal1) {
@@ -55,9 +53,9 @@ const modal1 = document.getElementById("settingsModal1");
                 playButton.classList.remove("hidden");
             }
         };
-        document.getElementById("replay1").addEventListener("click", function() {
-            location.reload(); // Reloads the current page
-        });
+        // document.getElementById("replay1").addEventListener("click", function() {
+        //     location.reload(); // Reloads the current page
+        // });
         document.getElementById("replay2").addEventListener("click", function() {
             location.reload(); // Reloads the current page
         });
