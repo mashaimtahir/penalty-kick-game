@@ -12,20 +12,30 @@ window.onload = function() {
 };
 
 
-const audioElement = document.getElementById('backgroundAudio');
+// const audioElement = document.getElementById('backgroundAudio');
 
-// Function to check audio state and apply it
-const checkAudioState = () => {
-    const isAudioPlaying = localStorage.getItem('audioPlaying') === 'true';
-    if (isAudioPlaying) {
-        audioElement.play();  // Start the audio if it's supposed to play
-    } else {
-        audioElement.pause();  // Pause the audio if it's supposed to be paused
-    }
-};
+// const checkAudioState = () => {
+//     const isAudioPlaying = localStorage.getItem('audioPlaying') === 'true';
+//     if (isAudioPlaying) {
+//         audioElement.play(); 
+//     } else {
+//         audioElement.pause();  
+//     }
+// };
 
-// Check and set audio state on page load
-window.addEventListener('load', checkAudioState);
+
+// window.addEventListener('load', checkAudioState);
+const audio = document.getElementById('backgroundAudio');
+
+// Load the audio state from localStorage when the page loads
+window.addEventListener('load', () => {
+  const audioState = localStorage.getItem('audioState');
+  if (audioState === 'on') {
+    audio.play(); // Play audio if the state is 'on'
+  } else {
+    audio.pause(); // Pause audio if the state is 'off'
+  }
+});
 
 
 
@@ -118,7 +128,7 @@ function showGoalMessage() {
         // Show the image after 1 second of goal message disappearance
         setTimeout(() => {
             showImage();
-        }, 1000); // 1 second delay before showing the image
+        }, 800); // 1 second delay before showing the image
     }, 1500); // Remove goal message after 1.5 seconds
 }
 function showGoalMissMessage() {
@@ -143,16 +153,21 @@ function showGoalMissMessage() {
 
     // Create the text element for the goal message
     const goalText = document.createElement('p');
-    goalText.textContent = 'OOOOPS YOU MISSED THE GOAL!!!';
+    goalText.textContent = 
+        'Oops! Looks like the goal moved when you weren’t looking!\n' + 
+        'Uh-oh! That one didn’t find the back of the net!\n' + 
+        'Whoops! So close, but it’s off target!';
     goalText.style.color = 'white'; // Text color
-    goalText.style.fontSize = '60px';
+    goalText.style.fontSize = '40px';
     goalText.style.width = '80%'; // Text width
     goalText.style.height = '200px'; // Text height
     goalText.style.textAlign = 'center';
-    goalText.style.lineHeight = '200px'; // Center the text vertically
+    goalText.style.lineHeight = '1.5'; // Line spacing
+    goalText.style.whiteSpace = 'pre-line'; // Preserve line breaks
+    
     // Append the text to the div
     goalDiv.appendChild(goalText);
-
+    
     // Append the div to the body
     document.body.appendChild(goalDiv);
 
@@ -163,7 +178,7 @@ function showGoalMissMessage() {
         // Show the image after 1 second of goal message disappearance
         setTimeout(() => {
             showImage();
-        }, 1000); // 1 second delay before showing the image
+        }, 800); // 1 second delay before showing the image
     }, 1500); // Remove goal message after 1.5 seconds
 }
 
@@ -172,9 +187,9 @@ function showGoalMissMessage() {
 function showImage() {
     // Create the image element
     const image = document.createElement('img');
-    image.src = 'pics/title.png'; // Replace with the actual image URL
+    image.src = './pics/MAINPAGELOGO.png';
     image.style.position = 'fixed';
-    image.style.top = '50%';
+    image.style.top = '45%';
     image.style.left = '50%';
     image.style.transform = 'translate(-50%, -50%) scale(0)'; // Start from center with 0 scale
     image.style.transition = 'transform 1s ease, opacity 1s ease'; // Smooth transition for transform and opacity
@@ -190,7 +205,7 @@ function showImage() {
 
     // Start the animation: scale to 1.5x size and fade in
     setTimeout(() => {
-        image.style.transform = 'translate(-50%, -50%) scale(1.5)';
+        image.style.transform = 'translate(-50%, -50%) scale(0.5)';
         image.style.opacity = '1'; // Fade in to full opacity
     }, 50); // Slight delay before starting the animation
 

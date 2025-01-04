@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Model Viewer - Fullscreen</title>
+    <link rel="stylesheet" type="text/css" href="game.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="loader"></div>
+    <div id="canvas-container"></div>
+    <script type="module">
+        import * as THREE from "three";
+        import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+        import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+        import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+      
+        let scene, camera, renderer, controls;
+        let goalieModel, goalieMixer, animations = [];
+        const mixers = [];
+        const clock = new THREE.Clock();
+        let goalieBoundingBoxHelpers = []; // Array to hold the bounding box helpers
+        let animationTriggered = false; // Track whether the animation has been triggered
+    
+        function init() {
+          scene = new THREE.Scene();
+          camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+          );
+          camera.position.set(0, 20, 40);
+      
+          const geometry = new THREE.PlaneGeometry(1200, 1200);
+          const material = new THREE.ShadowMaterial({ opacity: 0.5 });
+          const plane = new THREE.Mesh(geometry, material);
+          plane.rotation.x = -Math.PI / 2;
+          plane.position.y = 0;
+          plane.receiveShadow = true;
+          scene.add(plane);
+          
+          const stacy_txt = new THREE.TextureLoader().load("./pics/Gradient.png");
+          stacy_txt.flipY = false;
+    
+          const goalieMaterial = new THREE.MeshPhongMaterial({
+            map: stacy_txt,
+            color: 0xffffff,
+            skinning: true,
+          });
+    
+          renderer = new THREE.WebGLRenderer({ antialias: true });
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.outputEncoding = THREE.sRGBEncoding;
+          renderer.shadowMap.enabled = true;
+          renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+          document.getElementById("canvas-container").appendChild(renderer.domElement);
+    
+          const ambientLight = new THREE.AmbientLight(0xfff4e6, 2.4);
+          scene.add(ambientLight);
+    
+          const spotLight = new THREE.SpotLight(0xffd27f, 2.5);
+          spotLight.castShadow = true;
+          spotLight.position.set(10, 40, -10);
+          spotLight.shadow.mapSize.width = 2048;
+          spotLight.shadow.mapSize.height = 2048;
+          scene.add(spotLight);
+    
+          const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+          directionalLight.position.set(-10, 10, -10);
+          directionalLight.castShadow = true;
+          scene.add(directionalLight);
+    
+          controls = new OrbitControls(camera, renderer.domElement);
+          controls.enabled = true;
+    
+          const gltfLoader = new GLTFLoader();
+          const dracoLoader = new DRACOLoader();
+          dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.7/");
+          gltfLoader.setDRACOLoader(dracoLoader);
+    
+          gltfLoader.load(
+            "goalie.glb",
+            (gltf) => {
+              goalieModel = gltf.scene;
+              goalieModel.scale.set(3, 3, 3);
+              goalieModel.position.set(0, 0, 10);
+    
+              goalieModel.traverse((child) => {
+                if (child.isMesh) {
+                  child.castShadow = true;
+                  child.receiveShadow = true;
+                }
+              });
+    
+              scene.add(goalieModel);
+    
+              // Create multiple bounding boxes with different colors and sizes
+             
+              createBoundingBox(goalieModel, 0x00ff00, 5, 0, 10, 5, 2, 2); // Green box, custom size
+              createBoundingBox(goalieModel, 0x0000ff, -5, 0, 10, 5, 2, 2); // Blue box, custom size
+              createBoundingBox(goalieModel, 0xffff00, -10, 0, 10, 5, 2, 2); // Yellow box, custom size
+              createBoundingBox(goalieModel, 0xff00ff, 10, 0, 10, 5, 2, 2); // Magenta box, custom size
+              createBoundingBox(goalieModel, 0x00ffff, 1, 4, 10, 2, 7, 2); // Cyan box, custom size
+              createBoundingBox(goalieModel, 0x00ff00, -1, 4, 10, 2, 7, 2); // Green box, custom size
+              // Add animation to the goalie model
+              goalieMixer = new THREE.AnimationMixer(goalieModel);
+              animations = gltf.animations;
+    
+              const idleAnimation = animations.find(
+                (clip) => clip.name === "goalkeep-block-near-right"
+              );
+              if (idleAnimation) {
+                const idleAction = goalieMixer.clipAction(idleAnimation);
+                idleAction.setLoop(THREE.LoopRepeat, Infinity);
+                idleAction.play();
+                triggerAnimation(); // Trigger the bounding box effect when the animation starts
+              }
+    
+              
+    
+              goalieModel.traverse((child) => {
+                if (child.isMesh) {
+                  child.material = goalieMaterial;
+                }
+              });
+            },
+            undefined,
+            (error) => {
+              console.error("An error occurred while loading the goalie model:", error);
+            }
+          );
+    
+          window.addEventListener("resize", onWindowResize);
+        }
+    
+        function onWindowResize() {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+    
+        // Function to create a bounding box with a custom size
+        function createBoundingBox(model, color, x, y, z, width, height, depth) {
+          const geometry = new THREE.BoxGeometry(width, height, depth); // Bounding box size
+          const material = new THREE.MeshBasicMaterial({
+            color: color,
+            wireframe: true,
+          });
+          const boundingBox = new THREE.Mesh(geometry, material);
+          
+          // Set the position of the bounding box relative to the model
+          boundingBox.position.set(x, y, z);
+          scene.add(boundingBox);
+          goalieBoundingBoxHelpers.push(boundingBox); // Add to the array
+        }
+    
+        // Function to update all bounding boxes during animation
+        function updateBoundingBoxes() {
+          if (goalieBoundingBoxHelpers.length > 0) {
+            goalieBoundingBoxHelpers.forEach((box) => {
+          
+            });
+          }
+        }
+    
+        // Function to trigger the animation and bounding box transformation
+        function triggerAnimation() {
+          animationTriggered = true;
+          
+          // Reset after animation ends
+          setTimeout(() => {
+            animationTriggered = false;
+          }, 3000); // Assume animation lasts 3 seconds (adjust as needed)
+        }
+    
+        // Make sure to update the bounding box during animation frames
+        function animate() {
+          requestAnimationFrame(animate);
+          const delta = clock.getDelta();
+          if (goalieMixer) goalieMixer.update(delta);
+          updateBoundingBoxes();
+          renderer.render(scene, camera);
+        }
+    
+        init();
+        animate();
+    </script>
+    
+  </body>
+</html>

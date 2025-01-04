@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3D Model Viewer - Fullscreen</title>
-    <link rel="stylesheet" type="text/css" href="game.css">
-   
+    <link rel="stylesheet" type="text/css" href="game.css" />
+
     <!-- Import map for three.js version 0.168.0 -->
     <script type="importmap">
       {
@@ -15,1396 +15,1658 @@
         }
       }
     </script>
-</head>
-<body>
-    
-
+  </head>
+  <body>
     <div class="loader"></div>
     <div id="canvas-container">
-      
-        <div class="content">
-            <div class="buttons">
-                <!-- Only include the Pause button here -->
-                <div id="centerButton" class="button" data-content="pause">
-                    <img class="clickable-image" src="pics/pause4.png" alt="Pause Button"  style="margin-top: 40px;"/>
-                </div>
-            </div>
+      <div class="content">
+        <div class="buttons">
+          <!-- Only include the Pause button here -->
+          <div id="centerButton" class="button" data-content="pause">
+            <img
+              class="clickable-image"
+              src="pics/pause4.png"
+              alt="Pause Button"
+              style="margin-top: 40px"
+            />
+          </div>
         </div>
-      
-        <div id="modal-container">
-            <div class="modal-background">
-                <div class="modal">
-                    <button id="close-modal" class="close-button">&times;</button>
-                    <div id="modal-content"></div>
-                </div>
-            </div>
-        </div>
-      
-        <div id="settingsModal2" class="modal1">
-            <div class="modal-content2">
-                <div class="leveldiv2">GAME OVER</div>
-                <div class="modal-options2">
-                  <p style="color: aliceblue; font-size: 40px; margin-bottom: 5px;">Well Tried!!</p>
-                  <p id="finalScore" style="color: aliceblue; font-size: 20px; margin-top: 0; margin-bottom: 5px;">
-                    Your Score Is: {$score}
-                </p>
+      </div>
 
-                   
-                </div>
-               
-                <span class="replay" id="replay2">
-                    <img src="pics/R.png" alt="Close Button" style="height: 40px; width: 40px; position: absolute; top: 300px; left: 100px;">
-                </span>
-                <span class="resume" id="resume2">
-                    <a href="index.html">
-                        <img src="pics/H.png" alt="Close Button" style="height: 40px; width: 40px; position: absolute; top: 300px; left: 200px;">
-                    </a>
-                </span>
-             
-            </div>
+      <div id="modal-container">
+        <div class="modal-background">
+          <div class="modal">
+            <button id="close-modal" class="close-button">&times;</button>
+            <div id="modal-content"></div>
+          </div>
         </div>
+      </div>
 
-        <div id="scoreButton">
-            <img src="pics/score.png" />
+      <div id="settingsModal2" class="modal1">
+        <div class="modal-content2">
+          <div class="leveldiv2">GAME OVER</div>
+          <div class="modal-options2">
+            <p style="color: aliceblue; font-size: 40px; margin-bottom: 5px">
+              Well Tried!!
+            </p>
+            <p
+              id="finalScore"
+              style="
+                color: aliceblue;
+                font-size: 20px;
+                margin-top: 0;
+                margin-bottom: 5px;
+              "
+            >
+              Your Score Is: {$score}
+            </p>
+          </div>
+
+          <span class="replay" id="replay2">
+            <img
+              src="pics/R.png"
+              alt="Close Button"
+              style="
+                height: 40px;
+                width: 40px;
+                position: absolute;
+                top: 300px;
+                left: 100px;
+              "
+            />
+          </span>
+          <span class="resume" id="resume2">
+            <a href="index.html">
+              <img
+                src="pics/H.png"
+                alt="Close Button"
+                style="
+                  height: 40px;
+                  width: 40px;
+                  position: absolute;
+                  top: 300px;
+                  left: 200px;
+                "
+              />
+            </a>
+          </span>
         </div>
-    
-        <div class="scoreCount">
-            <p>Score: <span id="score">0</span></p>
-        </div>
-    
-        <div class="gameEND">
- <span id="Kicks">10</span>
-        </div>
-    
-        <div id="livesButton">
-            <img src="pics/lives.png" />
-        </div>
+      </div>
+
+      <div id="scoreButton">
+        <img src="pics/score.png" />
+      </div>
+
+      <div class="scoreCount">
+        <p>Score: <span id="score">0</span></p>
+      </div>
+
+      <div class="gameEND">
+        <span id="Kicks">10</span>
+      </div>
+
+      <div id="livesButton">
+        <img src="pics/lives.png" />
+      </div>
     </div>
-    
-    <audio id="backgroundAudio" src="pics/bgm.mp3" preload="auto" loop></audio>
-    
 
-    
+    <!-- <audio id="backgroundAudio" src="pics/fb-crowd.mp3" preload="auto" loop></audio> -->
+    <audio
+      id="backgroundAudio"
+      src="pics/fb-crowd.mp3"
+      preload="auto"
+      loop
+    ></audio>
 
     <script>
-        const buttons = document.querySelectorAll('.button');
-        const modalContainer = document.getElementById('modal-container');
-        const closeButton = document.getElementById('close-modal');
-        const modalContent = document.getElementById('modal-content');
-        const body = document.body;
-  
-        // Define content for the Pause button
-        const modalData = {
-            pause: `
+      const buttons = document.querySelectorAll(".button");
+      const modalContainer = document.getElementById("modal-container");
+      const closeButton = document.getElementById("close-modal");
+      const modalContent = document.getElementById("modal-content");
+      const body = document.body;
+
+      // Define content for the Pause button
+      const modalData = {
+        pause: `
                 <div class="leveldiv">Game Settings</div>
                 <div class="modal-options1">
                     <button>Replay</button>
                     <button>Resume</button>
                 </div>
               <span class="replay" id="replay1">
-    <img src="pics/R.png" alt="Replay Button" style="height: 40px; width: 40px; position: absolute; top: 230px; left: 140px;" onclick="refreshPage()">
+    <img src="pics/R.png" alt="Replay Button" style="height: 40px; width: 40px; position: absolute; top: 230px; left: 35%;" onclick="refreshPage()">
 </span>
                 <span class="resume" id="resume1">
                     <a href="index.html">
-                        <img src="pics/H.png" alt="Close Button" style="height: 40px; width: 40px; position: absolute; top: 230px; left: 220px;">
+                        <img src="pics/H.png" alt="Close Button" style="height: 40px; width: 40px; position: absolute; top: 230px; left: 55%;">
                     </a>
                 </span>
               
 
-            `
-        };
-  
-        // Open the modal and load content when the Pause button is clicked
-        buttons.forEach(button => {
-            if (button.getAttribute('data-content') === 'pause') {
-                button.addEventListener('click', () => {
-                    modalContent.innerHTML = modalData.pause;  // Load pause modal content
-                    modalContainer.className = ''; // Clear any existing classes
-                    modalContainer.classList.add('one'); // Show the modal
-                    body.classList.add('modal-active');
-                });
-            }
-        });
-        function refreshPage() {
-        location.reload(); // Reloads the current page
-    }
-        // Close the modal
-        closeButton.addEventListener('click', () => {
-            modalContainer.classList.add('out'); // Add closing animation
-            body.classList.remove('modal-active');
-        });
-    </script>
-  <script type="module">
-        import * as THREE from 'three';
-        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-        import { FontLoader } from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/loaders/FontLoader.js';
-        import { TextGeometry } from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/geometries/TextGeometry.js';
-       
-        let ballModel, goalPartModel, goalieModel;
-        let ballDirection = new THREE.Vector3(0, 0, -1); // Direction towards the goalie
-        const ballSpeed = 0.6; // Speed of the ball
-        let ballMoving = false;  // Set to false initially (ball won't move on load)
-        const ballTargetZ = -40;
-        let isGameOver = false;
-        
-        
-        let pathPoints = []; // Array to store the path points
-       
-        let pathCurve;
-        let ballTargetIndex = 0;
-        
-        let ballBoundingBox = null;
-        let goalBoundingBox = null;
-        let goalieBoundingBox = null;
-       
-     
+            `,
+      };
 
-        let startPosition = new THREE.Vector3(0, 0.4, 28);  // Starting position of the ball
-        let line;
-    
-        let scene, camera, renderer, controls;
-        const mixers = []; // Array to store AnimationMixer instances
-        const clock = new THREE.Clock();
-        let goalBoxHelper, goalieBoxHelper;
-    
-        function init() {
-            // Set up the scene, camera, and renderer
-            scene = new THREE.Scene();
-    
-            // Create the camera with fixed view
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    
-            // Set the camera position (stays at the same y position)
-            camera.position.set(0, 25, 40);
-          
-            const geometry = new THREE.PlaneGeometry(1200, 1200);
-            const material = new THREE.ShadowMaterial({ opacity: 0.5 });
-            const plane = new THREE.Mesh(geometry, material);
-            plane.rotation.x = - Math.PI / 2; // Rotate it to be flat on the ground
-            plane.position.y = 0;  // Keep the ground at y = 0
-            plane.receiveShadow = true; // Allow the ground to receive shadows
-            scene.add(plane);
-            const stacy_txt = new THREE.TextureLoader().load('./pics/Gradient.png');
-            stacy_txt.flipY = false;
-
-            const stacy_txt_striker = new THREE.TextureLoader().load('./pics/2.png');
-            stacy_txt_striker.flipY = false; 
-
-            const goalieMaterial = new THREE.MeshPhongMaterial({
-                map: stacy_txt,
-                color: 0xffffff,
-                skinning: true
-            });
-
-            const strikerMaterial = new THREE.MeshPhongMaterial({
-                map: stacy_txt_striker,
-                color: 0xffffff,
-                skinning: true
-            });
-            // Create the renderer
-            // THREE.ColorManagment.legacyMode=false;
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);  // Fullscreen size
-            renderer.outputEncoding = THREE.sRGBEncoding;
-            // renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            // renderer.outputEncoding = THREE.sRGBEncoding;
-            renderer.shadowMap.enabled = true; // Enable shadows
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
-    
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0xfff4e6, 2.4); // Warm soft yellowish light
-scene.add(ambientLight);
-
-// Spotlight simulating direct sunlight
-const spotLight = new THREE.SpotLight(0xffd27f, 2.5); // Adjusted intensity
-spotLight.castShadow = true;
-spotLight.position.set(10, 40, -10); // Position the light
-spotLight.shadow.mapSize.width = 2024; // Shadow map resolution
-spotLight.shadow.mapSize.height = 2024;
-spotLight.shadow.camera.near = 30;
-spotLight.shadow.camera.far = 100;
-scene.add(spotLight);
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-            directionalLight.position.set(-10, 10, -10);
-            directionalLight.castShadow = true; // Enable shadow casting
-            scene.add(directionalLight);
-   
-
-    
-            // Set up controls but disable them to prevent camera movement
-            controls = new OrbitControls(camera, renderer.domElement);
-            controls.enabled = false;  
-            // Configure DracoLoader for compressed GLTF files
-            const dracoLoader = new DRACOLoader();
-            dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
-
-
-
-              // Create the stadium strip as a 3D object (plane geometry)
-              const stripGeometry = new THREE.PlaneGeometry(160, 6.9); // Width and height of the strip
-              const stripMaterial = new THREE.MeshBasicMaterial({ color: 0xd4d132, side: THREE.DoubleSide });
-
-
-            const stadiumStrip = new THREE.Mesh(stripGeometry, stripMaterial);
-            stadiumStrip.position.set(0, 2.5, -13); // Position in front of the camera
-            stadiumStrip.rotation.x = Math.PI / 1; // Make it horizontal
-            scene.add(stadiumStrip);
-
-          
-
-            // Load font and create text
-            const fontLoader = new FontLoader();
-            fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-                const textGeometry = new TextGeometry('SCORE LIKE A KING', {
-                    font: font,
-                    size: 3, // Size of the text
-                    height: 0.1, // Depth of the text
-                });
-
-                const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-                const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-
-                // Center the text on the stadium strip
-                textMesh.position.set(-100, 2.2, -11); // Adjust text position on the strip
-                textMesh.rotation.x = Math.PI / 0.55;
-                scene.add(textMesh);
-
-
-                const textGeometry2 = new TextGeometry('SCORE LIKE A KING', {
-                    font: font,
-                    size: 3, // Size of the text
-                    height: 0.1, // Depth of the text
-                });
-
-                const textMaterial2 = new THREE.MeshBasicMaterial({ color: 0xffffff });
-                const textMesh2 = new THREE.Mesh(textGeometry2, textMaterial2);
-                 
-                // Center the text on the stadium strip
-                textMesh2.position.set(0, 2.2, -11); // Adjust text position on the strip
-                textMesh2.rotation.x = Math.PI / 0.55;
-                scene.add(textMesh2);
-
-                const textGeometry3 = new TextGeometry('SCORE LIKE A KING', {
-                    font: font,
-                    size: 3, // Size of the text
-                    height: 0.1, // Depth of the text
-                });
-
-                const textMaterial3 = new THREE.MeshBasicMaterial({ color: 0xffffff });
-                const textMesh3 = new THREE.Mesh(textGeometry3, textMaterial3);
-                 
-                // Center the text on the stadium strip
-                textMesh3.position.set(60, 2.2, -11); // Adjust text position on the strip
-                textMesh3.rotation.x = Math.PI / 0.55;
-                scene.add(textMesh3);
-
-                const textGeometry4 = new TextGeometry('SCORE LIKE A KING', {
-                    font: font,
-                    size: 3, // Size of the text
-                    height: 0.1, // Depth of the text
-                });
-
-                const textMaterial4 = new THREE.MeshBasicMaterial({ color: 0xffffff });
-                const textMesh4 = new THREE.Mesh(textGeometry4, textMaterial4);
-                 
-                // Center the text on the stadium strip
-                textMesh4.position.set(-50, 2.2, -11); // Adjust text position on the strip
-                textMesh4.rotation.x = Math.PI / 0.55;
-                scene.add(textMesh4);
-            });
-
-            
-            
-            // Load crowd models
-            const gltfLoader = new GLTFLoader();
-            gltfLoader.setDRACOLoader(dracoLoader);
-
-            
-
-            gltfLoader.load(
-                'goal.glb',
-                function (gltf) {
-					const goalPartModel = gltf.scene;
-        goalPartModel.scale.set(1.4, 1.3, 1); // Adjust scale if needed
-        goalPartModel.position.set(0, 0, 8);  // Move behind the goal
-                    scene.add(goalPartModel);
-                    goalPartModel.rotation.set(-0.5, 0, 0);
-      
-   // Traverse the model and change the material color to white
-   goalPartModel.traverse((child) => {
-            if (child.isMesh) {
-                child.material = new THREE.MeshBasicMaterial({ color: 0xffffff }); // Set material to white
-            }
-        });
-                    // Initialize goal bounding box
-                    goalBoundingBox = new THREE.Box3().setFromObject(goalPartModel);
-                    // drawBoundingBox(goalBoundingBox, 0x0000ff);  
-                },
-                undefined,
-                function (error) {
-                    console.error('An error occurred with the goal model:', error);
-                }
-            );
-            function drawBoundingBox(box, color) {
-            const boxHelper = new THREE.Box3Helper(box, color);
-            scene.add(boxHelper);
+      // Open the modal and load content when the Pause button is clicked
+      buttons.forEach((button) => {
+        if (button.getAttribute("data-content") === "pause") {
+          button.addEventListener("click", () => {
+            modalContent.innerHTML = modalData.pause; // Load pause modal content
+            modalContainer.className = ""; // Clear any existing classes
+            modalContainer.classList.add("one"); // Show the modal
+            body.classList.add("modal-active");
+          });
         }
-       
+      });
+      function refreshPage() {
+        location.reload(); // Reloads the current page
+      }
+      // Close the modal
+      closeButton.addEventListener("click", () => {
+        modalContainer.classList.add("out"); // Add closing animation
+        body.classList.remove("modal-active");
+      });
+    </script>
+    <script type="module">
+      import * as THREE from "three";
+      import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+      import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+      import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+      import { FontLoader } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/loaders/FontLoader.js";
+      import { TextGeometry } from "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/geometries/TextGeometry.js";
 
-let goalieModel; // Goalkeeper model
-let goalieMixer; 
-// Load the goalie model
-gltfLoader.load(
-    'goalie.glb', // Path to the goalie.glb model
-    function (gltf) {
-        goalieModel = gltf.scene;
-        goalieModel.scale.set(3.2, 3, 3); // Adjust scale if needed
-        goalieModel.position.set(0, 0, 10); // Move behind the goal
-        goalieModel.traverse((child) => {
-            if (child.isMesh) {
+      let ballModel, goalPartModel, goalieModel;
+      let ballDirection = new THREE.Vector3(0, 0, -1); // Direction towards the goalie
+      const ballSpeed = 0.6; // Speed of the ball
+      let ballMoving = false; // Set to false initially (ball won't move on load)
+      const ballTargetZ = -40;
+      let isGameOver = false;
+      // let goalieModel;
+      let goalieMixer;
+      let goalieBoundingBoxHelpers = []; 
+      let goalieBoundingBoxes = {};
+
+      let pathPoints = []; // Array to store the path points
+
+      let pathCurve;
+      let ballTargetIndex = 0;
+
+      let ballBoundingBox = null;
+      let goalBoundingBox = null;
+      let goalieBoundingBox = null;
+
+      let startPosition = new THREE.Vector3(0, 0.4, 28); // Starting position of the ball
+      let line;
+
+      let scene, camera, renderer, controls;
+      const mixers = []; // Array to store AnimationMixer instances
+      const clock = new THREE.Clock();
+      let goalBoxHelper, goalieBoxHelper;
+
+      let  AnimeName;
+
+      function init() {
+        // Set up the scene, camera, and renderer
+        scene = new THREE.Scene();
+
+        // Create the camera with fixed view
+        camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000
+        );
+
+        // Set the camera position (stays at the same y position)
+        camera.position.set(0, 25, 40);
+
+        const geometry = new THREE.PlaneGeometry(1200, 1200);
+        const material = new THREE.ShadowMaterial({ opacity: 0.5 });
+        const plane = new THREE.Mesh(geometry, material);
+        plane.rotation.x = -Math.PI / 2; // Rotate it to be flat on the ground
+        plane.position.y = 0; // Keep the ground at y = 0
+        plane.receiveShadow = true; // Allow the ground to receive shadows
+        scene.add(plane);
+        const stacy_txt = new THREE.TextureLoader().load("./pics/Gradient.png");
+        stacy_txt.flipY = false;
+
+        const stacy_txt_striker = new THREE.TextureLoader().load(
+          "./pics/man2.png"
+        );
+        stacy_txt_striker.flipY = false;
+
+        const goalieMaterial = new THREE.MeshPhongMaterial({
+          map: stacy_txt,
+          color: 0xffffff,
+          skinning: true,
+        });
+
+        const strikerMaterial = new THREE.MeshPhongMaterial({
+          map: stacy_txt_striker,
+          color: 0xffffff,
+          skinning: true,
+        });
+        // Create the renderer
+        // THREE.ColorManagment.legacyMode=false;
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight); // Fullscreen size
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        // renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        // renderer.outputEncoding = THREE.sRGBEncoding;
+        renderer.shadowMap.enabled = true; // Enable shadows
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document
+          .getElementById("canvas-container")
+          .appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xfff4e6, 2.4); // Warm soft yellowish light
+        scene.add(ambientLight);
+
+        // Spotlight simulating direct sunlight
+        const spotLight = new THREE.SpotLight(0xffd27f, 2.5); // Adjusted intensity
+        spotLight.castShadow = true;
+        spotLight.position.set(10, 40, -10); // Position the light
+        spotLight.shadow.mapSize.width = 2024; // Shadow map resolution
+        spotLight.shadow.mapSize.height = 2024;
+        spotLight.shadow.camera.near = 30;
+        spotLight.shadow.camera.far = 100;
+        scene.add(spotLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(-10, 10, -10);
+        directionalLight.castShadow = true; // Enable shadow casting
+        scene.add(directionalLight);
+
+        // Set up controls but disable them to prevent camera movement
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enabled = false;
+        // Configure DracoLoader for compressed GLTF files
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath(
+          "https://www.gstatic.com/draco/versioned/decoders/1.5.7/"
+        );
+
+        // Create the stadium strip as a 3D object (plane geometry)
+        const stripGeometry = new THREE.PlaneGeometry(160, 6.9); // Width and height of the strip
+        const stripMaterial = new THREE.MeshBasicMaterial({
+          color: 0xd4d132,
+          side: THREE.DoubleSide,
+        });
+
+        const stadiumStrip = new THREE.Mesh(stripGeometry, stripMaterial);
+        stadiumStrip.position.set(0, 2.5, -13); // Position in front of the camera
+        stadiumStrip.rotation.x = Math.PI / 1; // Make it horizontal
+        scene.add(stadiumStrip);
+        const textureLoader = new THREE.TextureLoader();
+
+// Load the images
+const imageTexture1 = textureLoader.load('./pics/MN.jpg');
+const imageTexture2 = textureLoader.load('./pics/NFUK.jpg');
+const imageTexture3 = textureLoader.load('./pics/LN.jpg');
+
+
+// Create materials for each image
+const imageMaterial1 = new THREE.MeshBasicMaterial({ map: imageTexture1 });
+const imageMaterial2 = new THREE.MeshBasicMaterial({ map: imageTexture2 });
+const imageMaterial3 = new THREE.MeshBasicMaterial({ map: imageTexture3 });
+
+// Create geometries for the images
+const planeGeometry = new THREE.PlaneGeometry(3.5, 3.5); // Adjust size as needed
+
+// Create meshes for the images
+const imageMesh1 = new THREE.Mesh(planeGeometry, imageMaterial1);
+imageMesh1.position.set(60, 3.2, -11); // Adjust position
+imageMesh1.rotation.x = Math.PI / 0.55;
+
+const imageMesh2 = new THREE.Mesh(planeGeometry, imageMaterial2);
+imageMesh2.position.set(-25, 3.2, -11); // Adjust position
+imageMesh2.rotation.x = Math.PI / 0.55;
+
+const imageMesh3 = new THREE.Mesh(planeGeometry, imageMaterial3);
+imageMesh3.position.set(45, 3.2, -11); // Adjust position
+imageMesh3.rotation.x = Math.PI / 0.55;
+
+// Add the image meshes to the scene
+scene.add(imageMesh1, imageMesh2, imageMesh3);
+
+            
+        // Load font and create text
+        const fontLoader = new FontLoader();
+        fontLoader.load(
+          "Yesteryear_Regular.json",
+          (font) => {
+            const textGeometry = new TextGeometry("Football News UK", {
+              font: font,
+              size: 2.8, // Size of the text
+              height: 0.1, // Depth of the text
+            });
+
+            const textMaterial = new THREE.MeshBasicMaterial({
+              color: 0xffffff,
+            });
+            const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+            // Center the text on the stadium strip
+            textMesh.position.set(-65, 2, -11); // Adjust text position on the strip
+            textMesh.rotation.x = Math.PI / 0.55;
+            scene.add(textMesh);
+
+            const textGeometry2 = new TextGeometry("In Partnership With", {
+              font: font,
+              size: 2.8, // Size of the text
+              height: 0.1, // Depth of the text
+            });
+
+            const textMaterial2 = new THREE.MeshBasicMaterial({
+              color: 0xffffff,
+            });
+            const textMesh2 = new THREE.Mesh(textGeometry2, textMaterial2);
+
+            // Center the text on the stadium strip
+            textMesh2.position.set(0, 2, -11); // Adjust text position on the strip
+            textMesh2.rotation.x = Math.PI / 0.55;
+            scene.add(textMesh2);
+   
+          }
+        );
+
+ 
+        // Load crowd models
+        const gltfLoader = new GLTFLoader();
+        gltfLoader.setDRACOLoader(dracoLoader);
+
+        gltfLoader.load(
+          "goal.glb",
+          function (gltf) {
+            const goalPartModel = gltf.scene;
+            goalPartModel.scale.set(1.4, 1.3, 1); // Adjust scale if needed
+            goalPartModel.position.set(0, 0, 8); // Move behind the goal
+            scene.add(goalPartModel);
+            goalPartModel.rotation.set(-0.5, 0, 0);
+
+            // Traverse the model and change the material color to white
+            goalPartModel.traverse((child) => {
+              if (child.isMesh) {
+                child.material = new THREE.MeshBasicMaterial({
+                  color: 0xffffff,
+                }); // Set material to white
+              }
+            });
+            // Initialize goal bounding box
+            goalBoundingBox = new THREE.Box3().setFromObject(goalPartModel);
+            // drawBoundingBox(goalBoundingBox, 0x0000ff);
+          },
+          undefined,
+          function (error) {
+            console.error("An error occurred with the goal model:", error);
+          }
+        );
+        function drawBoundingBox(box, color) {
+          const boxHelper = new THREE.Box3Helper(box, color);
+          scene.add(boxHelper);
+        }
+        
+     
+        // Load the goalie model
+        gltfLoader.load(
+          "goalie.glb", // Path to the goalie.glb model
+          function (gltf) {
+            goalieModel = gltf.scene;
+            // goalieModel.scale.set(3.2, 3, 3);
+            // goalieModel.position.set(0, 0, 10);
+            goalieModel.traverse((child) => {
+              if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
+              }
+            });
+            // const goalieModel = gltf.scene;
+            goalieModel.scale.set(3.2, 3, 3);
+            // goalieBoundingBox = new THREE.Box3().setFromObject(goalieModel);
+
+            goalieModel.position.set(0, 0, 10); // Move behind the goal
+
+            // Initialize goal bounding box
+
+            // drawBoundingBox(goalieBoundingBox, 0x0000ff);
+            //  goalieBoundingBox.position.set(2,2,2);
+            scene.add(goalieModel);
+
+            // Initialize mixer for goalie model animations
+            goalieMixer = new THREE.AnimationMixer(goalieModel);
+
+            // Animation names list
+            const animationNames = [
+              'goalkeep-block-left',
+              'goalkeep-block-near-left',
+              'goalkeep-block-near-right',
+              "goalkeep-block-right",
+              'goalkeep-block-stationary',
+              'goalkeep-dive-left',
+              'goalkeep-dive-right',
+              "goalkeep-idle",
+            ];
+           
+              createBoundingBox(goalieModel,  5, 2, 10, 5, 3, 3, 'goalkeep-block-right'); // Green box, custom size
+               createBoundingBox(goalieModel,  -5, 2, 10, 5, 3, 3, 'goalkeep-block-left'); // Blue box, custom size
+             createBoundingBox(goalieModel, -10, 2, 10, 5, 3, 3, 'goalkeep-dive-left'); // Yellow box, custom size
+             createBoundingBox(goalieModel,  10, 2, 10, 5, 3, 3, 'goalkeep-dive-right'); // Magenta box, custom size
+              createBoundingBox(goalieModel,  1, 4, 10, 2, 6, 3, 'goalkeep-block-near-right'); // Cyan box, custom size
+            createBoundingBox(goalieModel,  -1, 4, 10, 2, 6, 3, 'goalkeep-block-near-left');
+            
+            // Start with an idle or stationary animation
+            const idleAnimation = gltf.animations.find(
+              (clip) => clip.name === "goalkeep-idle"
+            );
+            if (idleAnimation) {
+              const idleAction = goalieMixer.clipAction(idleAnimation);
+              idleAction.setLoop(THREE.LoopRepeat, Infinity); // Loop idle animation
+              idleAction.play(); // Start with idle animation
             }
-        });  
-        goalieBoundingBox = new THREE.Box3(
-                        new THREE.Vector3(-3, -2, -2), // Min coordinates
-                        new THREE.Vector3(3, 5, 10) // Max coordinates
-                    );
-                    // drawBoundingBox(goalieBoundingBox, 0x00ff00);  
 
-        scene.add(goalieModel);
+            // Function to play a random animation
 
-        // Initialize mixer for goalie model animations
-        goalieMixer = new THREE.AnimationMixer(goalieModel);
+            function playRandomAnimation() {
+              // Pick a random animation name (excluding idle)
+              const randomIndex = Math.floor(
+                Math.random() * (animationNames.length - 1)
+              ); // Exclude the last (idle) animation
+              const randomAnimationName = animationNames[randomIndex];
+              AnimeName = randomAnimationName;
 
-        // Animation names list
-        const animationNames = [
-            'goalkeep-block-left',    
-            'goalkeep-block-near-left',
-            'goalkeep-block-near-right',
-            'goalkeep-block-right',
-            'goalkeep-block-stationary',
-            'goalkeep-dive-left',
-            'goalkeep-dive-right',
-            'goalkeep-idle'
-        ];
+              // Find the corresponding animation clip by name
+              const clip = gltf.animations.find(
+                (clip) => clip.name === randomAnimationName
+              );
 
-        // Start with an idle or stationary animation
-        const idleAnimation = gltf.animations.find((clip) => clip.name === 'goalkeep-idle');
-        if (idleAnimation) {
-            const idleAction = goalieMixer.clipAction(idleAnimation);
-            idleAction.setLoop(THREE.LoopRepeat, Infinity); // Loop idle animation
-            idleAction.play(); // Start with idle animation
-        }
-
-        // Function to play a random animation
-        function playRandomAnimation() {
-            // Pick a random animation name (excluding idle)
-            const randomIndex = Math.floor(Math.random() * (animationNames.length - 1)); // Exclude the last (idle) animation
-            const randomAnimationName = animationNames[randomIndex];
-
-            // Find the corresponding animation clip by name
-            const clip = gltf.animations.find((clip) => clip.name === randomAnimationName);
-
-            if (clip) {
+              if (clip) {
                 // Stop the idle animation before starting a random animation
                 goalieMixer.stopAllAction();
 
                 const action = goalieMixer.clipAction(clip);
                 action.setLoop(THREE.LoopOnce); // Play animation only once
                 action.clampWhenFinished = true; // Stop at the end of animation
-                action.play(); // Play the random animation
+                action.play(); 
+                
+              }
             }
-        }
 
-        // Function to ensure idle animation plays when no other animation is running
-        function checkIdleAnimation() {
-            const isAnyActionPlaying = goalieMixer._actions.some(action => action.isRunning());
-            if (!isAnyActionPlaying) {
+            // Function to ensure idle animation plays when no other animation is running
+            function checkIdleAnimation() {
+              const isAnyActionPlaying = goalieMixer._actions.some((action) =>
+                action.isRunning()
+              );
+              if (!isAnyActionPlaying) {
                 // If no action is playing, switch to idle
                 const idleAction = goalieMixer.clipAction(idleAnimation);
                 idleAction.setLoop(THREE.LoopRepeat, Infinity); // Ensure idle animation loops
                 idleAction.play();
+              }
             }
-        }
 
-        // Add the goalie's mixer to the mixers array for updating
-        mixers.push(goalieMixer);
+            // Add the goalie's mixer to the mixers array for updating
+            mixers.push(goalieMixer);
 
-        // Trigger random animation 2 seconds after striker click
-     
-        document.addEventListener('animateBall', playRandomAnimation);
-        // Periodically check if the idle animation needs to be applied
-        setInterval(checkIdleAnimation, 100); // Check every 100ms (adjust interval as needed)
+            // Trigger random animation 2 seconds after striker click
 
-        goalieModel.traverse((child) => {
-                        if (child.isMesh) {
-                            child.material = goalieMaterial;
-                        }
-                    });
-    },
-    undefined,
-    function (error) {
-        console.error('An error occurred with the goalie model:', error);
-    }
-);
+            document.addEventListener("animateBall", playRandomAnimation);
+            // Periodically check if the idle animation needs to be applied
+            setInterval(checkIdleAnimation, 100); // Check every 100ms (adjust interval as needed)
 
+            goalieModel.traverse((child) => {
+              if (child.isMesh) {
+                child.material = goalieMaterial;
+              }
+            });
+            trackGoaliePosition();
+          },
+          undefined,
+          function (error) {
+            console.error("An error occurred with the goalie model:", error);
+          }
+        );
+        
 
-            // Load the stadium model (stadium-part.glb)
-            gltfLoader.load(
-                'stadium-part.glb',  // Path to the stadium-part.glb model
-                function (gltf) {
-                    const stadiumModel = gltf.scene;
-                    stadiumModel.scale.set(7.1, 6, 2.5); // Adjust scale if needed
-                    stadiumModel.position.set(0, -4, -25);  // Move behind the goal
-                    scene.add(stadiumModel);
-                    stadiumModel.traverse((child) => {
-            if (child.isMesh) {
+        // Load the stadium model (stadium-part.glb)
+        gltfLoader.load(
+          "stadium-part.glb", // Path to the stadium-part.glb model
+          function (gltf) {
+            const stadiumModel = gltf.scene;
+            stadiumModel.scale.set(7.1, 6, 2.5); // Adjust scale if needed
+            stadiumModel.position.set(0, -4, -25); // Move behind the goal
+            scene.add(stadiumModel);
+            stadiumModel.traverse((child) => {
+              if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-            }
-        });  
-                    // model.position.y = 4.5;
-                    stadiumModel.rotation.set(-0.4, 0, 0);
-                },
-                undefined,
-                function (error) {
-                    console.error('An error occurred with the stadium model:', error);
-                }
-            );
+              }
+            });
+            // model.position.y = 4.5;
+            stadiumModel.rotation.set(-0.4, 0, 0);
+          },
+          undefined,
+          function (error) {
+            console.error("An error occurred with the stadium model:", error);
+          }
+        );
 
-            const positions =  [  5.5, 9.125, 12.75, 16.375, 20.0, 23.625, 27.25, 30.875, 34.5, 38.125, 41.75, 45.375, 49.0]
-const gap = 1.5; // Adjusted gap to cover the area
-const modelsCount = 70; // Number of models to place on each side
+        const positions = [
+          5.5, 9.125, 12.75, 16.375, 20.0, 23.625, 27.25, 30.875, 34.5, 38.125,
+          41.75, 45.375, 49.0,
+        ];
+        const gap = 1.5; // Adjusted gap to cover the area
+        const modelsCount = 70; // Number of models to place on each side
 
-// Load the grass-part model once
-gltfLoader.load(
-    'grass-part.glb',
-    function (gltf) {
-        const originalModel = gltf.scene;
+        // Load the grass-part model once
+        gltfLoader.load(
+          "grass-part.glb",
+          function (gltf) {
+            const originalModel = gltf.scene;
 
-        positions.forEach((positionZ) => {
-            // Center Model
-            const centerModel = originalModel.clone();
-            centerModel.scale.set(0.63, 0.63, 0.63); // Scale down the model
-            centerModel.position.set(0, 0, positionZ);
-            scene.add(centerModel);
-            
+            positions.forEach((positionZ) => {
+              // Center Model
+              const centerModel = originalModel.clone();
+              centerModel.scale.set(0.63, 0.63, 0.63); // Scale down the model
+              centerModel.position.set(0, 0, positionZ);
+              scene.add(centerModel);
 
-            // Models to the Left
-            for (let i = 1; i <= modelsCount; i++) {
+              // Models to the Left
+              for (let i = 1; i <= modelsCount; i++) {
                 const leftModel = originalModel.clone();
                 leftModel.scale.set(0.63, 0.63, 0.63); // Scale down the model
                 leftModel.position.set(-i * gap, 0, positionZ);
                 scene.add(leftModel);
-            }
+              }
 
-            // Models to the Right
-            for (let i = 1; i <= modelsCount; i++) {
+              // Models to the Right
+              for (let i = 1; i <= modelsCount; i++) {
                 const rightModel = originalModel.clone();
                 rightModel.scale.set(0.63, 0.63, 0.63); // Scale down the model
                 rightModel.position.set(i * gap, 0, positionZ);
                 scene.add(rightModel);
+              }
+            });
+          },
+          undefined,
+          function (error) {
+            console.error(
+              "An error occurred while loading the grass model:",
+              error
+            );
+          }
+        );
+        const grassModelPositions = [
+          { x: 50, y: 0, z: -9 },
+          { x: 0, y: 0, z: -9 },
+          { x: -50, y: 0, z: -9 },
+          { x: 50, y: 0, z: -0.5 },
+          { x: 0, y: 0, z: -0.5 },
+          { x: -50, y: 0, z: -0.5 },
+        ];
+
+        grassModelPositions.forEach((position) => {
+          gltfLoader.load(
+            "grass-part.glb",
+            (gltf) => {
+              const goalModel = gltf.scene;
+              goalModel.scale.set(10, 1, 1.5);
+              goalModel.position.set(position.x, position.y, position.z);
+              scene.add(goalModel);
+            },
+            undefined,
+            (error) => {
+              console.error("An error occurred with the goal model:", error);
             }
+          );
         });
-    },
-    undefined,
-    function (error) {
-        console.error("An error occurred while loading the grass model:", error);
-    }
-);
-const grassModelPositions = [
-    { x: 50, y: 0, z: -9 },
-    { x: 0, y: 0, z: -9 },
-    { x: -50, y: 0, z: -9 },
-    { x: 50, y: 0, z: -0.5 },
-    { x: 0, y: 0, z: -0.5 },
-    { x: -50, y: 0, z: -0.5 }
-];
 
-grassModelPositions.forEach(position => {
-    gltfLoader.load(
-        'grass-part.glb',
-        (gltf) => {
-            const goalModel = gltf.scene;
-            goalModel.scale.set(10, 1, 1.5);
-            goalModel.position.set(position.x, position.y, position.z);
-            scene.add(goalModel);
-        },
-        undefined,
-        (error) => {
-            console.error('An error occurred with the goal model:', error);
-        }
-    );
-});
+        let score = 0; // Initialize score to 0
+        let scoreElement = document.getElementById("score"); // Get score display element
 
-let score = 0;  // Initialize score to 0
-let scoreElement = document.getElementById("score");  // Get score display element
-
-gltfLoader.load(
-    'striker.glb', // Path to the striker.glb model
-    function (gltf) {
-        const strikerModel = gltf.scene;
-        strikerModel.scale.set(2, 2.5, 2.5); // Initial scale
-        strikerModel.position.set(-1, 0, 32.5); // Initial position
-        // linesPartModel.rotation.set(0, 0, 0);
-        strikerModel.traverse((child) => {
-            if (child.isMesh) {
+        gltfLoader.load(
+          "striker.glb", // Path to the striker.glb model
+          function (gltf) {
+            const strikerModel = gltf.scene;
+            strikerModel.scale.set(2, 2.5, 2.5); // Initial scale
+            strikerModel.position.set(-1, 0, 32.5); // Initial position
+            // linesPartModel.rotation.set(0, 0, 0);
+            strikerModel.traverse((child) => {
+              if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-            }
-        });  
-        // Set rotation to make the striker's back face towards the camera
-        strikerModel.rotation.set(0, Math.PI, 0); // Rotate 180 degrees on the Y-axis
+              }
+            });
+            // Set rotation to make the striker's back face towards the camera
+            strikerModel.rotation.set(0, Math.PI, 0); // Rotate 180 degrees on the Y-axis
 
-        scene.add(strikerModel);
-        
+            scene.add(strikerModel);
 
-        // Store the default state of the model
-        const defaultState = {
-            position: strikerModel.position.clone(),
-            rotation: strikerModel.rotation.clone(),
-            scale: strikerModel.scale.clone(),
-        };
+            // Store the default state of the model
+            const defaultState = {
+              position: strikerModel.position.clone(),
+              rotation: strikerModel.rotation.clone(),
+              scale: strikerModel.scale.clone(),
+            };
 
+            // Initialize the AnimationMixer for the striker model
+            const strikerMixer = new THREE.AnimationMixer(strikerModel);
 
-        
-        // Initialize the AnimationMixer for the striker model
-        const strikerMixer = new THREE.AnimationMixer(strikerModel);
+            // Find the "offense-kick2" animation
+            const offenseKick2Animation = gltf.animations.find(
+              (animation) => animation.name === "offense-kick2"
+            );
+            const offenseIdleAnimation = gltf.animations.find(
+              (animation) => animation.name === "offense-idle"
+            );
+            if (offenseIdleAnimation) {
+              const idleAction = strikerMixer.clipAction(offenseIdleAnimation);
+              idleAction.play();
+              if (offenseKick2Animation) {
+                const action = strikerMixer.clipAction(offenseKick2Animation);
+                action.setLoop(THREE.LoopOnce); // Play the animation only once
+                action.clampWhenFinished = false; // Allow animation to reset after finishing
 
-        // Find the "offense-kick2" animation
-        const offenseKick2Animation = gltf.animations.find(animation => animation.name === 'offense-kick2');
-        const offenseIdleAnimation = gltf.animations.find(animation => animation.name === 'offense-idle');
-        if (offenseIdleAnimation) {
-    const idleAction = strikerMixer.clipAction(offenseIdleAnimation);
-    idleAction.play();
-        if (offenseKick2Animation) {
-            const action = strikerMixer.clipAction(offenseKick2Animation);
-            action.setLoop(THREE.LoopOnce); // Play the animation only once
-            action.clampWhenFinished = false; // Allow animation to reset after finishing
+                // Animate striker's position
+                function animatePosition(targetX, duration, onComplete) {
+                  const initialX = strikerModel.position.x;
+                  const startTime = performance.now();
 
-            // Animate striker's position
-            function animatePosition(targetX, duration, onComplete) {
-                const initialX = strikerModel.position.x;
-                const startTime = performance.now();
-
-                function animate(time) {
+                  function animate(time) {
                     const elapsed = time - startTime;
                     const progress = Math.min(elapsed / duration, 1);
-                    strikerModel.position.x = initialX + (targetX - initialX) * progress;
+                    strikerModel.position.x =
+                      initialX + (targetX - initialX) * progress;
 
                     if (progress < 1) {
-                        requestAnimationFrame(animate);
+                      requestAnimationFrame(animate);
                     } else if (onComplete) {
-                        onComplete(); // Callback after the animation
+                      onComplete(); // Callback after the animation
                     }
+                  }
+
+                  requestAnimationFrame(animate);
                 }
 
-                requestAnimationFrame(animate);
+                // To prevent repeated clicks, track if the striker is ready
+                let isStrikerReady = true;
+
+                // Listen for the 'ballAnimationStarted' event
+                document.addEventListener("ballAnimationStarted", () => {
+                  if (!isStrikerReady) return; // Ignore if the striker is not ready
+
+                  isStrikerReady = false; // Disable further triggers until ready
+                  action.reset(); // Reset the animation to the start
+                  action.play(); // Play the animation
+
+                  // Move the striker to x = 5 over 1 second
+                  const targetX = 5; // Target x position
+                  const durationToTarget = 1000; // Duration to target position (1 second)
+                  animatePosition(targetX, durationToTarget, () => {
+                    // Hide the striker before returning
+                    strikerModel.visible = false;
+
+                    // Return to the starting position quickly
+                    const returnDuration = 500; // Return in 0.5 seconds
+                    animatePosition(
+                      defaultState.position.x,
+                      returnDuration,
+                      () => {
+                        // Show the striker after reaching the starting position
+                        strikerModel.visible = true;
+                        console.log(
+                          "Striker returned to the starting position."
+                        );
+
+                        // Re-enable striker for another animation
+                        setTimeout(() => {
+                          isStrikerReady = true; // Re-enable after animation
+                        }, 2000); // Allow the striker to be ready again after 4 seconds
+                      }
+                    );
+                  });
+                });
+              } else {
+                console.warn(
+                  'Animation "offense-kick2" not found in the GLTF file.'
+                );
+              }
+            } else {
+              console.warn(
+                'Animation "offense-idle" not found in the GLTF file.'
+              );
             }
 
-            // To prevent repeated clicks, track if the striker is ready
-            let isStrikerReady = true;
-            
+            strikerModel.traverse((child) => {
+              if (child.isMesh) {
+                child.material = strikerMaterial;
+              }
+            });
+            // Add the striker's mixer to the mixers array for updating
+            mixers.push(strikerMixer);
+          },
+          undefined,
+          function (error) {
+            console.error("An error occurred with the striker model:", error);
+          }
+        );
 
-          // Listen for the 'ballAnimationStarted' event
-document.addEventListener('ballAnimationStarted', () => {
-    if (!isStrikerReady) return; // Ignore if the striker is not ready
-
-    isStrikerReady = false; // Disable further triggers until ready
-    action.reset(); // Reset the animation to the start
-    action.play(); // Play the animation
-
-    // Move the striker to x = 5 over 1 second
-    const targetX = 5; // Target x position
-    const durationToTarget = 1000; // Duration to target position (1 second)
-    animatePosition(targetX, durationToTarget, () => {
-        // Hide the striker before returning
-        strikerModel.visible = false;
-
-        // Return to the starting position quickly
-        const returnDuration = 500; // Return in 0.5 seconds
-        animatePosition(defaultState.position.x, returnDuration, () => {
-            // Show the striker after reaching the starting position
-            strikerModel.visible = true;
-            console.log('Striker returned to the starting position.');
-
-            // Re-enable striker for another animation
-            setTimeout(() => {
-                isStrikerReady = true; // Re-enable after animation
-            }, 4000); // Allow the striker to be ready again after 4 seconds
-        });
-    });
-});
-
-        } else {
-        console.warn('Animation "offense-kick2" not found in the GLTF file.');
-    }
-} else {
-    console.warn('Animation "offense-idle" not found in the GLTF file.');
-}
-
-
-strikerModel.traverse((child) => {
-            if (child.isMesh) {
-                // Make sure that the material is not black or has any unwanted properties
-                if (child.material) {
-                    child.material.needsUpdate = true;
-                    child.material.color.set(0xffffff);  // Set to white to avoid it being black
-                    child.material.metalness = 0.0;      // If metallic, set to 0
-                    child.material.roughness = 0.5;      // Adjust roughness to see if it helps
-                    if (child.material.map) {
-                        child.material.map.encoding = THREE.sRGBEncoding;  // Ensure textures are correctly encoded
-                    }
+        gltfLoader.load(
+          "lines-part.glb",
+          function (gltf) {
+            const linesPartModel = gltf.scene;
+            linesPartModel.scale.set(3, 2, 2); // Adjust scale if needed
+            linesPartModel.position.set(0, 0, 22.5); // Move behind the goal
+            scene.add(linesPartModel);
+            linesPartModel.rotation.set(0.01, 0, 0);
+          },
+          undefined,
+          function (error) {
+            console.error("An error occurred with the stadium model:", error);
+          }
+        );
+        const crowdMixers = [];
+        // Function to load and add a crowd model to the scene
+        function crowd2Positions(modelPath, positionX, positionY, positionZ) {
+          gltfLoader.load(
+            modelPath, // Path to the model
+            function (gltf) {
+              const crowdModel = gltf.scene;
+              crowdModel.scale.set(5, 5, 5); // Adjust scale if needed
+              crowdModel.position.set(positionX, positionY, positionZ); // Set position based on parameters
+              scene.add(crowdModel);
+              crowdModel.traverse((child) => {
+                if (child.isMesh) {
+                  child.castShadow = true;
+                  child.receiveShadow = true;
                 }
-            }
-        });
-        // Add the striker's mixer to the mixers array for updating
-        mixers.push(strikerMixer);
-    },
-    undefined,
-    function (error) {
-        console.error('An error occurred with the striker model:', error);
-    }
-);
+              });
+              // Initialize mixer for crowd model animations
+              const crowdMixer = new THREE.AnimationMixer(crowdModel);
+              const animations = gltf.animations;
 
-
-            gltfLoader.load(
-    'lines-part.glb',
-    function (gltf) {
-        const linesPartModel = gltf.scene;
-        linesPartModel.scale.set(3, 2, 2); // Adjust scale if needed
-        linesPartModel.position.set(0, 0, 22.5);  // Move behind the goal
-        scene.add(linesPartModel);
-        linesPartModel.rotation.set(0.01, 0, 0);
-    },
-    undefined,
-    function (error) {
-        console.error('An error occurred with the stadium model:', error);
-    }
-);
-            const crowdMixers = [];           
- // Function to load and add a crowd model to the scene
-function crowd2Positions(modelPath, positionX, positionY, positionZ) {
-    gltfLoader.load(
-        modelPath, // Path to the model
-        function (gltf) {
-            const crowdModel = gltf.scene;
-            crowdModel.scale.set(5, 5, 5); // Adjust scale if needed
-            crowdModel.position.set(positionX, positionY, positionZ); // Set position based on parameters
-            scene.add(crowdModel);
-            crowdModel.traverse((child) => {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        });
-            // Initialize mixer for crowd model animations
-            const crowdMixer = new THREE.AnimationMixer(crowdModel);
-            const animations = gltf.animations;
-
-            // Ensure there are animations to select from
-            if (animations && animations.length > 0) {
+              // Ensure there are animations to select from
+              if (animations && animations.length > 0) {
                 // Select a random animation from the available ones
-                const randomIndex = Math.floor(Math.random() * animations.length);
+                const randomIndex = Math.floor(
+                  Math.random() * animations.length
+                );
                 const randomClip = animations[randomIndex];
 
                 // Play the selected animation
                 const action = crowdMixer.clipAction(randomClip);
                 action.setLoop(THREE.LoopRepeat, Infinity); // Loop the animation
                 action.play();
-            } else {
-                console.warn('No animations found in the GLB file');
+              } else {
+                console.warn("No animations found in the GLB file");
+              }
+
+              // Store the mixer for animation updates later
+              mixers.push(crowdMixer); // Store each mixer in an array for updates later
+            },
+            undefined,
+            function (error) {
+              console.error("An error occurred with the crowd model:", error);
             }
-
-            // Store the mixer for animation updates later
-            mixers.push(crowdMixer); // Store each mixer in an array for updates later
-        },
-        undefined,
-        function (error) {
-            console.error('An error occurred with the crowd model:', error);
+          );
         }
-    );
-}
 
+        camera.position.set(0, 5, 30); // Camera position
 
-camera.position.set(0, 5, 30); // Camera position
+        // Load crowd models at different positions with the same animation
+        loadCrowdModel(gltfLoader, -3, 12, -50, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, 13, 12, -50, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, 34, 12, -50, "cheering-sitting");
+        loadCrowdModel(gltfLoader, -24, 12, -50, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, -44, 12, -50, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -56, 12, -50, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, -74, 12, -50, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -90, 12, -50, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, -100, 12, -50, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, 100, 12, -50, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, 90, 12, -50, "cheering-sitting");
+        loadCrowdModel(gltfLoader, 74, 12, -50, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, 56, 12, -50, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, 8, 9, -45, "cheering-sitting");
+        loadCrowdModel(gltfLoader, 18, 9, -45, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, 28, 9, -45, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, 42, 9, -45, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, 53, 9, -45, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, 68, 9, -45, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, 79, 9, -45, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, 90, 9, -45, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, 101, 9, -45, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -8, 9, -45, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, -18, 9, -45, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, -28, 9, -45, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -48, 9, -45, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, -58, 9, -45, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, -68, 9, -45, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -78, 9, -45, "cheering-sitting");
+        loadCrowdModel(gltfLoader, -90, 9, -45, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, -100, 9, -45, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, -110, 9, -45, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, -3, 6, -40, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, 13, 6, -40, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, 33, 6, -40, "cheering-sitting");
+        loadCrowdModel(gltfLoader, -23, 6, -40, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, -42, 6, -40, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -58, 6, -40, "cheering-sitting");
+        loadCrowdModel(gltfLoader, -74, 6, -40, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, -90, 6, -40, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -100, 6, -40, "cheering-sitting");
+        loadCrowdModel(gltfLoader, 100, 6, -40, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, 88, 6, -40, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, 73, 6, -40, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, 58, 6, -40, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, 8, 3, -20, "cheering");
+        loadCrowd1Model(gltfLoader, 18, 3, -20, "clapping");
+        loadCrowdModel(gltfLoader, 33, 3, -20, "cheering");
+        loadedCrowdModel(gltfLoader, 43, 3, -20, "clapping");
+        loadCrowd1Model(gltfLoader, 55, 3, -20, "cheering");
+        loadCrowdModel(gltfLoader, 70, 3, -20, "cheering");
+        loadedCrowdModel(gltfLoader, 80, 3, -20, "clapping");
+        loadCrowd1Model(gltfLoader, 90, 3, -20, "cheering");
+        loadCrowdModel(gltfLoader, -8, 3, -20, "clapping");
+        loadedCrowdModel(gltfLoader, -18, 3, -20, "cheering");
+        loadCrowd1Model(gltfLoader, -38, 3, -20, "clapping");
+        loadCrowdModel(gltfLoader, -50, 3, -20, "clapping");
+        loadedCrowdModel(gltfLoader, -60, 3, -20, "cheering");
+        loadCrowd1Model(gltfLoader, -70, 3, -20, "clapping");
+        loadCrowdModel(gltfLoader, -80, 3, -20, "cheering");
+        loadedCrowdModel(gltfLoader, -90, 3, -20, "clapping");
+        loadCrowd1Model(gltfLoader, -100, 3, -20, "cheering");
+        loadCrowdModel(gltfLoader, -110, 3, -20, "clapping");
 
-          // Load crowd models at different positions with the same animation
-loadCrowdModel(gltfLoader, -3, 12, -50, 'cheering-sitting');
-loadedCrowdModel(gltfLoader, 13, 12, -50, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader, 34, 12, -50, 'cheering-sitting');
-loadCrowdModel(gltfLoader, -24, 12, -50, 'cheering-sitting');
-loadedCrowdModel(gltfLoader, -44, 12, -50, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader,-56, 12, -50, 'cheering-sitting');
-loadedCrowdModel(gltfLoader,-74, 12, -50, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader, -90, 12, -50, 'fistpump-sitting');
-loadCrowdModel(gltfLoader,  -100, 12, -50, 'cheering-sitting');
-loadedCrowdModel(gltfLoader,  100, 12, -50, 'fistpump-sitting');  
-loadCrowd1Model(gltfLoader,  90, 12, -50 ,'cheering-sitting');  
-loadCrowdModel(gltfLoader,  74, 12, -50, 'fistpump-sitting');  
-loadedCrowdModel(gltfLoader,  56, 12, -50, 'fistpump-sitting'); 
-loadCrowd1Model(gltfLoader,  8, 9, -45, 'cheering-sitting');
-loadCrowdModel(gltfLoader,  18, 9, -45, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader, 28, 9, -45, 'cheering-sitting');
-loadCrowd1Model(gltfLoader,  42, 9, -45, 'fistpump-sitting');
-loadCrowdModel(gltfLoader,  53, 9, -45, 'cheering-sitting');
-loadedCrowdModel(gltfLoader, 68, 9, -45, 'cheering-sitting');
-loadCrowd1Model(gltfLoader,  79, 9, -45, 'fistpump-sitting');
-loadCrowdModel(gltfLoader,  90, 9, -45, 'cheering-sitting');
-loadedCrowdModel(gltfLoader,  101, 9, -45, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader,  -8, 9, -45, 'fistpump-sitting');
-loadCrowdModel(gltfLoader, -18, 9, -45, 'cheering-sitting');
-loadedCrowdModel(gltfLoader,  -28, 9, -45, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader,  -48, 9, -45, 'fistpump-sitting');
-loadCrowdModel(gltfLoader, -58, 9, -45, 'cheering-sitting');
-loadedCrowdModel(gltfLoader,  -68, 9, -45, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader,  -78, 9, -45, 'cheering-sitting');
-loadCrowdModel(gltfLoader,  -90, 9, -45, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader, -100, 9, -45, 'cheering-sitting');
-loadCrowd1Model(gltfLoader,  -110, 9, -45, 'fistpump-sitting');
-loadCrowdModel(gltfLoader, -3, 6, -40, 'cheering-sitting');
-loadedCrowdModel(gltfLoader, 13, 6, -40, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader, 33, 6, -40, 'cheering-sitting');
-loadCrowdModel(gltfLoader, -23, 6, -40, 'cheering-sitting');
-loadedCrowdModel(gltfLoader, -42, 6, -40, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader,-58, 6, -40, 'cheering-sitting');
-loadCrowdModel(gltfLoader,-74, 6, -40, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader, -90, 6, -40, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader,  -100, 6, -40, 'cheering-sitting');
-loadCrowdModel(gltfLoader,  100, 6, -40, 'fistpump-sitting');  
-loadedCrowdModel(gltfLoader,  88, 6, -40 ,'cheering-sitting');  
-loadCrowd1Model(gltfLoader,  73, 6, -40, 'fistpump-sitting');  
-loadCrowdModel(gltfLoader,  58, 6, -40, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader,  8, 3, -20, 'cheering');
-loadCrowd1Model(gltfLoader,  18, 3, -20, 'clapping');
-loadCrowdModel(gltfLoader, 33, 3, -20, 'cheering');
-loadedCrowdModel(gltfLoader,  43, 3, -20, 'clapping');
-loadCrowd1Model(gltfLoader,  55, 3, -20, 'cheering');
-loadCrowdModel(gltfLoader, 70, 3, -20, 'cheering');
-loadedCrowdModel(gltfLoader,  80, 3, -20, 'clapping');
-loadCrowd1Model(gltfLoader,  90, 3, -20, 'cheering');
-loadCrowdModel(gltfLoader,  -8, 3, -20, 'clapping');
-loadedCrowdModel(gltfLoader, -18, 3, -20, 'cheering');
-loadCrowd1Model(gltfLoader,  -38, 3, -20, 'clapping');
-loadCrowdModel(gltfLoader,  -50, 3, -20, 'clapping');
-loadedCrowdModel(gltfLoader, -60, 3, -20, 'cheering');
-loadCrowd1Model(gltfLoader,  -70, 3, -20, 'clapping');
-loadCrowdModel(gltfLoader,  -80, 3, -20, 'cheering');
-loadedCrowdModel(gltfLoader,  -90, 3, -20, 'clapping');
-loadCrowd1Model(gltfLoader, -100, 3, -20, 'cheering');
-loadCrowdModel(gltfLoader,  -110, 3, -20, 'clapping');
+        loadCrowdModel(gltfLoader, -8, 12, -50, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, 13, 12, -50, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, 44, 12, -50, "cheering-sitting");
+        loadCrowdModel(gltfLoader, -29, 12, -50, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, -49, 12, -50, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -61, 12, -50, "cheering-sitting");
+        loadCrowdModel(gltfLoader, -79, 12, -50, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, -95, 12, -50, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -105, 12, -50, "cheering-sitting");
+        loadCrowdModel(gltfLoader, 105, 12, -50, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, 95, 12, -50, "cheering-sitting");
+        loadCrowdModel(gltfLoader, 79, 12, -50, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, 61, 12, -50, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, 13, 9, -45, "cheering-sitting");
+        loadCrowdModel(gltfLoader, 23, 9, -45, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, 34, 9, -45, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, 48, 9, -45, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, 58, 9, -45, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, 73, 9, -45, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, 84, 9, -45, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, 95, 9, -45, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, 106, 9, -45, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, -13, 9, -45, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, -23, 9, -45, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, -33, 9, -45, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, -53, 9, -45, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, -63, 9, -45, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, -73, 9, -45, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, -83, 9, -45, "cheering-sitting");
+        loadCrowdModel(gltfLoader, -95, 9, -45, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -105, 9, -45, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, -115, 9, -45, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, -8, 6, -40, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, 18, 6, -40, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, 42, 6, -40, "cheering-sitting");
+        loadCrowdModel(gltfLoader, -28, 6, -40, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, -47, 6, -40, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, -63, 6, -40, "cheering-sitting");
+        loadCrowdModel(gltfLoader, -79, 6, -40, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, -95, 6, -40, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, -105, 6, -40, "cheering-sitting");
+        loadCrowdModel(gltfLoader, 105, 6, -40, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, 95, 6, -40, "cheering-sitting");
+        loadedCrowdModel(gltfLoader, 79, 6, -40, "fistpump-sitting");
+        loadCrowdModel(gltfLoader, 63, 6, -40, "fistpump-sitting");
+        loadCrowd1Model(gltfLoader, 13, 3, -20, "clapping");
+        loadedCrowdModel(gltfLoader, 23, 3, -20, "cheering");
+        loadCrowdModel(gltfLoader, 38, 3, -20, "clapping");
+        loadCrowd1Model(gltfLoader, 48, 3, -20, "cheering");
+        loadedCrowdModel(gltfLoader, 60, 3, -20, "clapping");
+        loadCrowdModel(gltfLoader, 75, 3, -20, "cheering");
+        loadCrowd1Model(gltfLoader, 85, 3, -20, "clapping");
+        loadedCrowdModel(gltfLoader, 95, 3, -20, "cheering");
+        loadCrowdModel(gltfLoader, -13, 3, -20, "clapping");
+        loadCrowd1Model(gltfLoader, -23, 3, -20, "cheering");
+        loadedCrowdModel(gltfLoader, -34, 3, -20, "clapping");
+        loadCrowdModel(gltfLoader, -55, 3, -20, "fcheering");
+        loadCrowd1Model(gltfLoader, -65, 3, -20, "clapping");
+        loadedCrowdModel(gltfLoader, -75, 3, -20, "cheering");
+        loadCrowdModel(gltfLoader, 3, 12, -50, "cheering-sitting");
+        loadCrowd1Model(gltfLoader, 3, 9, -45, "fistpump-sitting");
+        loadedCrowdModel(gltfLoader, 3, 6, -45, "cheering-sitting");
+        loadCrowdModel(gltfLoader, 3, 3, -40, "fistpump-sitting");
 
-loadCrowdModel(gltfLoader, -8, 12, -50, 'cheering-sitting');
-loadedCrowdModel(gltfLoader, 13, 12, -50, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader, 44, 12, -50, 'cheering-sitting');
-loadCrowdModel(gltfLoader, -29, 12, -50, 'cheering-sitting');
-loadedCrowdModel(gltfLoader, -49, 12, -50, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader,-61, 12, -50, 'cheering-sitting');
-loadCrowdModel(gltfLoader,-79, 12, -50, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader, -95, 12, -50, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader,  -105, 12, -50, 'cheering-sitting');
-loadCrowdModel(gltfLoader,  105, 12, -50, 'fistpump-sitting');  
-loadedCrowdModel(gltfLoader,  95, 12, -50 ,'cheering-sitting');  
-loadCrowdModel(gltfLoader,  79, 12, -50, 'fistpump-sitting');  
-loadCrowd1Model(gltfLoader,  61, 12, -50, 'fistpump-sitting'); 
-loadedCrowdModel(gltfLoader,  13, 9, -45, 'cheering-sitting');
-loadCrowdModel(gltfLoader,  23, 9, -45, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader,  34, 9, -45, 'cheering-sitting');
-loadedCrowdModel(gltfLoader,  48, 9, -45, 'fistpump-sitting');
-loadCrowdModel(gltfLoader,  58, 9, -45, 'cheering-sitting');
-loadCrowd1Model(gltfLoader, 73, 9, -45, 'cheering-sitting');
-loadedCrowdModel(gltfLoader,  84, 9, -45, 'fistpump-sitting');
-loadCrowdModel(gltfLoader,  95, 9, -45, 'cheering-sitting');
-loadCrowd1Model(gltfLoader,  106, 9, -45, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader,  -13, 9, -45, 'fistpump-sitting');
-loadCrowdModel(gltfLoader, -23, 9, -45, 'cheering-sitting');
-loadCrowd1Model(gltfLoader,  -33, 9, -45, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader,  -53, 9, -45, 'fistpump-sitting');
-loadCrowdModel(gltfLoader, -63, 9, -45, 'cheering-sitting');
-loadCrowd1Model(gltfLoader,  -73, 9, -45, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader,  -83, 9, -45, 'cheering-sitting');
-loadCrowdModel(gltfLoader,  -95, 9, -45, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader, -105, 9, -45, 'cheering-sitting');
-loadedCrowdModel(gltfLoader,  -115, 9, -45, 'fistpump-sitting');
-loadCrowdModel(gltfLoader, -8, 6, -40, 'cheering-sitting');
-loadCrowd1Model(gltfLoader, 18, 6, -40, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader, 42, 6, -40, 'cheering-sitting');
-loadCrowdModel(gltfLoader, -28, 6, -40, 'cheering-sitting');
-loadCrowd1Model(gltfLoader, -47, 6, -40, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader,-63, 6, -40, 'cheering-sitting');
-loadCrowdModel(gltfLoader,-79, 6, -40, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader, -95, 6, -40, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader,  -105, 6, -40, 'cheering-sitting');
-loadCrowdModel(gltfLoader,  105, 6, -40, 'fistpump-sitting');  
-loadCrowd1Model(gltfLoader,  95, 6, -40 ,'cheering-sitting');  
-loadedCrowdModel(gltfLoader,  79, 6, -40, 'fistpump-sitting');  
-loadCrowdModel(gltfLoader,  63, 6, -40, 'fistpump-sitting');
-loadCrowd1Model(gltfLoader,  13, 3, -20, 'clapping');
-loadedCrowdModel(gltfLoader,  23, 3, -20, 'cheering');
-loadCrowdModel(gltfLoader,  38, 3, -20, 'clapping');
-loadCrowd1Model(gltfLoader,  48, 3, -20, 'cheering');
-loadedCrowdModel(gltfLoader,  60, 3, -20, 'clapping');
-loadCrowdModel(gltfLoader, 75, 3, -20, 'cheering');
-loadCrowd1Model(gltfLoader,  85, 3, -20, 'clapping');
-loadedCrowdModel(gltfLoader,  95, 3, -20, 'cheering');
-loadCrowdModel(gltfLoader,  -13, 3, -20, 'clapping');
-loadCrowd1Model(gltfLoader, -23, 3, -20, 'cheering');
-loadedCrowdModel(gltfLoader,  -34, 3, -20, 'clapping');
-loadCrowdModel(gltfLoader,  -55, 3, -20, 'fcheering');
-loadCrowd1Model(gltfLoader, -65, 3, -20, 'clapping');
-loadedCrowdModel(gltfLoader,  -75, 3, -20, 'cheering');
-loadCrowdModel(gltfLoader,  3, 12, -50, 'cheering-sitting');
-loadCrowd1Model(gltfLoader,  3, 9, -45, 'fistpump-sitting');
-loadedCrowdModel(gltfLoader, 3, 6, -45, 'cheering-sitting');
-loadCrowdModel(gltfLoader,  3, 3, -40, 'fistpump-sitting');
-
-
-gltfLoader.load(
-                'ball.glb',
-                function (gltf) {
-                    ballModel = gltf.scene;
-                    ballModel.scale.set(0.4, 0.4, 0.4); // Adjust scale if needed
-                    ballModel.position.copy(startPosition); // Initial position
-                    scene.add(ballModel);
-                    ballModel.traverse((child) => {
-            if (child.isMesh) {
+        gltfLoader.load(
+          "ball.glb",
+          function (gltf) {
+            ballModel = gltf.scene;
+            ballModel.scale.set(0.4, 0.4, 0.4); // Adjust scale if needed
+            ballModel.position.copy(startPosition); // Initial position
+            scene.add(ballModel);
+            ballModel.traverse((child) => {
+              if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-            }
-        });
-                    // Initialize ball bounding box
-                    ballBoundingBox = new THREE.Box3().setFromObject(ballModel);
-                    // drawBoundingBox(ballBoundingBox, 0xff0000);  
-                },
-                undefined,
-                function (error) {
-                    console.error('An error occurred with the ball model:', error);
-                }
-            );
+              }
+            });
+            // Initialize ball bounding box
+            ballBoundingBox = new THREE.Box3().setFromObject(ballModel);
+            // drawBoundingBox(ballBoundingBox, 0xff0000);
+          },
+          undefined,
+          function (error) {
+            console.error("An error occurred with the ball model:", error);
+          }
+        );
+// Load the ball model
+// Keep the existing ball loader code as it is.
 
-            // Handle mouse events to draw path
-            window.addEventListener('mousemove', onMouseMove);
-            window.addEventListener('mousedown', onMouseDown);
-            window.addEventListener('mouseup', onMouseUp);
+// Handle both mouse and touch events to draw the path
+window.addEventListener("mousemove", onMouseMove);
+window.addEventListener("mousedown", onMouseDown);
+window.addEventListener("mouseup", onMouseUp);
 
-            // Window resize event to adjust the camera and renderer size
-            window.addEventListener('resize', onWindowResize, false);
-        }
+// Add touch event listeners
+window.addEventListener("touchstart", onTouchStart, { passive: false });
+window.addEventListener("touchmove", onTouchMove, { passive: false });
+window.addEventListener("touchend", onTouchEnd);
 
-        // Function to draw the bounding box with a specific color
-        function drawBoundingBox(box, color) {
-            const boxHelper = new THREE.Box3Helper(box, color);
-            scene.add(boxHelper);
-        }
+// Window resize event to adjust the camera and renderer size
+window.addEventListener("resize", onWindowResize, false);
 
-        let drawingPath = false;
+// Function to draw the bounding box with a specific color
+function drawBoundingBox(box, color) {
+  const boxHelper = new THREE.Box3Helper(box, color);
+  scene.add(boxHelper);
+}
+
+let drawingPath = false;
 
 function onMouseMove(event) {
-    if (!drawingPath) return;
-
-    // Get mouse position in normalized device coordinates (-1 to +1) for both components
-    let mouse = new THREE.Vector2();
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    let raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(mouse, camera);
-
-    // Create an array of planes
-    const planes = [
-        new THREE.Plane(new THREE.Vector3(0, 1, 0.05), 0),   
-        new THREE.Plane(new THREE.Vector3(0, 1, 0.15), 0),
-        new THREE.Plane(new THREE.Vector3(0, 1, 0.25), 0),
-        new THREE.Plane(new THREE.Vector3(0, 1, 0.35), 0)
-    ];
-
-    // Select a random plane from the array
-    const randomIndex = Math.floor(Math.random() * planes.length);
-    const plane = planes[randomIndex];
-
-    const intersection = new THREE.Vector3();
-    raycaster.ray.intersectPlane(plane, intersection);
-
-    // Add the intersection point to the path
-    pathPoints.push(intersection);
-
-    // Draw the line while drawing the path
-    updatePathCurve();
-    if (!line) {
-        const material = new THREE.LineBasicMaterial({ 
-    color: 0xffffff, 
-    transparent: true, 
-    opacity: 0.5 // Adjust this value between 0 (fully transparent) and 1 (fully opaque)
-});
-
-        const geometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
-        line = new THREE.Line(geometry, material);
-        scene.add(line);
-    } else {
-        line.geometry.setFromPoints(pathPoints);
-    }
+  if (!drawingPath) return;
+  handleDrawing(event.clientX, event.clientY);
 }
 
 function onMouseDown() {
-    // Start drawing the path when the mouse is pressed
-    pathPoints = []; // Clear the previous path
-    drawingPath = true;
+  pathPoints = []; // Clear the previous path
+  drawingPath = true;
 }
 
 function onMouseUp() {
-    // Stop drawing the path when the mouse is released
-    drawingPath = false;
-    if (pathPoints.length > 1) {
-        // Remove the path once it is drawn
-        animateBall();
-    }
+  drawingPath = false;
+  if (pathPoints.length > 1) {
+    animateBall();
+  }
+}
+
+function onTouchStart(event) {
+  event.preventDefault(); // Prevent scrolling or gestures
+  pathPoints = []; // Clear the previous path
+  drawingPath = true;
+}
+
+function onTouchMove(event) {
+  if (!drawingPath) return;
+  event.preventDefault(); // Prevent scrolling or gestures
+  const touch = event.touches[0]; // Use the first touch point
+  handleDrawing(touch.clientX, touch.clientY);
+}
+
+function onTouchEnd() {
+  drawingPath = false;
+  if (pathPoints.length > 1) {
+    animateBall();
+  }
+}
+
+function handleDrawing(clientX, clientY) {
+  // Get normalized device coordinates (-1 to +1) for both components
+  let mouse = new THREE.Vector2();
+  mouse.x = (clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+
+  let raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(mouse, camera);
+
+  // Create an array of planes
+  const planes = [
+    new THREE.Plane(new THREE.Vector3(0, 1, 0.05), 0),
+    new THREE.Plane(new THREE.Vector3(0, 1, 0.15), 0),
+    new THREE.Plane(new THREE.Vector3(0, 1, 0.32), 0),
+  ];
+
+  // Select a random plane from the array
+  const randomIndex = Math.floor(Math.random() * planes.length);
+  const plane = planes[randomIndex];
+
+  const intersection = new THREE.Vector3();
+  raycaster.ray.intersectPlane(plane, intersection);
+
+  // Add the intersection point to the path
+  pathPoints.push(intersection);
+
+  // Draw the line while drawing the path
+  updatePathCurve();
+  if (!line) {
+    const material = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.5, // Adjust this value between 0 (fully transparent) and 1 (fully opaque)
+    });
+
+    const geometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
+    line = new THREE.Line(geometry, material);
+    scene.add(line);
+  } else {
+    line.geometry.setFromPoints(pathPoints);
+  }
 }
 
 function updatePathCurve() {
-    if (pathPoints.length > 1) {
-        pathCurve = new THREE.CatmullRomCurve3(pathPoints);
-    }
+  if (pathPoints.length > 1) {
+    pathCurve = new THREE.CatmullRomCurve3(pathPoints);
+  }
 }
-  
-function displayGameOver() {
-    // Set the flag to true when game over is displayed
-    isGameOver = true;
-   
-    const modal = document.getElementById('settingsModal2');
-    modal.style.display = 'block'; // Show the modal
+      }
 
-    const scoreContainer = modal.querySelector('#finalScore'); // Use ID for the score container
-    scoreContainer.innerHTML = `Your Score Is: ${score}`;
-    // Hide modal when close button is clicked
-    const closeButton = document.getElementById('closeBtn2');
-    closeButton.addEventListener('click', function() {
-        modal.style.display = 'none'; // Hide the modal
-    });
+      function displayGameOver() {
+        // Set the flag to true when game over is displayed
+        isGameOver = true;
 
-    // Replay the game when replay button is clicked
-    const replayButton = document.querySelector('.replay');
-    replayButton.addEventListener('click', function() {
-        resetGame(); // Call a function to reset the game (you need to define this function)
-        modal.style.display = 'none'; // Hide the modal
-    });
+        const modal = document.getElementById("settingsModal2");
+        modal.style.display = "block"; // Show the modal
 
- 
+        const scoreContainer = modal.querySelector("#finalScore"); // Use ID for the score container
+        scoreContainer.innerHTML = `Your Score Is: ${score}`;
+        // Hide modal when close button is clicked
+        const closeButton = document.getElementById("closeBtn2");
+        closeButton.addEventListener("click", function () {
+          modal.style.display = "none"; // Hide the modal
+        });
 
-// Function to reset the game (you can define the logic based on your game)
-function resetGame() {
-    Kicks = 5; // Reset Kicks to initial value
-    const kickElement = document.getElementById('Kicks');
-    kickElement.textContent = Kicks; // Update kicks display
-    // Reset other game states like score, ball position, etc. as needed
-}
+        // Replay the game when replay button is clicked
+        const replayButton = document.querySelector(".replay");
+        replayButton.addEventListener("click", function () {
+          resetGame(); // Call a function to reset the game (you need to define this function)
+          modal.style.display = "none"; // Hide the modal
+        });
 
-}
+        // Function to reset the game (you can define the logic based on your game)
+        function resetGame() {
+          Kicks = 5; // Reset Kicks to initial value
+          const kickElement = document.getElementById("Kicks");
+          kickElement.textContent = Kicks; // Update kicks display
+          // Reset other game states like score, ball position, etc. as needed
+        }
+      }
 
-        let initialCameraPosition = new THREE.Vector3(0, 25, 40); 
-        let cameraOffset = new THREE.Vector3(0, 25, 40);
-		let elapsedTime = 0; // To track time for rotation
-let returnDuration = 0.1; // Time duration for ball return in seconds
-let ballSound = new Audio('pics/kick1.ogg'); // Load the audio
-ballSound.loop = false; // Ensure the audio does not loop
-let GOALSound = new Audio('pics/goalcrowd.ogg'); // Load the audio
-GOALSound.loop = false;
-let whistleSound = new Audio('pics/whistle1.ogg'); // Load the audio
-whistleSound.loop = false;
-let kicks = 10; // Initialize total kicks allowed
-const kicksElement = document.getElementById('Kicks');
+      let initialCameraPosition = new THREE.Vector3(0, 25, 40);
+      let cameraOffset = new THREE.Vector3(0, 25, 40);
+      let elapsedTime = 0; // To track time for rotation
+      let returnDuration = 0.1; // Time duration for ball return in seconds
+      let ballSound = new Audio("pics/kick1.ogg"); // Load the audio
+      ballSound.loop = false; // Ensure the audio does not loop
+      let GOALSound = new Audio("pics/goalcrowd.ogg"); // Load the audio
+      GOALSound.loop = false;
+      let whistleSound = new Audio("pics/whistle1.ogg"); // Load the audio
+      whistleSound.loop = false;
+      let kicks = 10; // Initialize total kicks allowed
+      const kicksElement = document.getElementById("Kicks");
 
-function animateBall() {
-    if (pathPoints.length < 2) return; // Ensure there are at least two points
+      function animateBall() {
+        if (pathPoints.length < 2) return; // Ensure there are at least two points
 
-    const startPoint = pathPoints[0];
-    const endPoint = pathPoints[pathPoints.length - 1];
-    const direction = new THREE.Vector3().subVectors(endPoint, startPoint).normalize();
+        const startPoint = pathPoints[0];
+        const endPoint = pathPoints[pathPoints.length - 1];
+        const direction = new THREE.Vector3()
+          .subVectors(endPoint, startPoint)
+          .normalize();
 
-    const speed = 0.7; // Ball's movement speed
-    const distance = startPoint.distanceTo(endPoint);
-    let traveled = 0;
+        const speed = 0.7; // Ball's movement speed
+        const distance = startPoint.distanceTo(endPoint);
+        let traveled = 0;
 
-    if (!ballMoving && kicks > 0) {
-     
-        kicks--; // Decrement kicks by 1
-        const kicksElement = document.getElementById('Kicks'); // Update the kicks display
-        kicksElement.textContent = kicks;
+        if (!ballMoving && kicks > 0) {
+          kicks--; // Decrement kicks by 1
+          const kicksElement = document.getElementById("Kicks"); // Update the kicks display
+          kicksElement.textContent = kicks;
 
-        // Check if kicks are 0 and call game over
-        if (kicks === 0) {
-           setTimeout(() => {
-             displayGameOver();
-           },2000); // Call the game over function
+          // Check if kicks are 0 and call game over
+          if (kicks === 0) {
+            setTimeout(() => {
+              displayGameOver();
+            }, 2000); // Call the game over function
             return; // Stop further ball movement
-        }
-    }
-  
-    document.dispatchEvent(new Event('animateBall'));
-    const event = new CustomEvent('ballAnimationStarted');
-    document.dispatchEvent(event);
-      
-    // Play the ball sound when the ball starts moving
-    setTimeout(() => {
-    ballSound.play(); 
-  
-}, 400); 
-    // Play the whistle sound after 1.5 seconds
-    setTimeout(() => {
-        whistleSound.play();
-    }, 2000); // 1.5 seconds after the ball starts moving
-
-    function moveBallForward() {
-    const extraDistance = 20; // Distance to move beyond the endpoint
-    const finalDistance = distance + extraDistance; // Extended distance
-    if (traveled < finalDistance) {
-        const delta = Math.min(speed, finalDistance - traveled);
-        ballModel.position.addScaledVector(direction, delta);
-        traveled += delta;
-
-        // Rotate the ball
-        const rotationSpeed = 6 * Math.PI; // Double the speed of rotation (radians per second)
-        elapsedTime += delta / distance * returnDuration;
-        ballModel.rotation.y += rotationSpeed * (delta / distance);
-
-        // Update the ball's bounding box
-        ballBoundingBox.setFromObject(ballModel);
-
-        // Move camera with the ball
-        updateCameraPosition();
-
-        // Check for collision with the goal
-        if (goalBoundingBox && ballBoundingBox.intersectsBox(goalBoundingBox)) {
-            console.log('Collision with goal detected!');
-            showGoalMessage();
-            GOALSound.play();
-            moveBallToZeroYAxisSlowly();
-            bounceBackgoal();
-            // returnBallToStart();
-            return;
-        }
-console.log('Collision with goal detected!', ballBoundingBox.intersectsBox(goalBoundingBox), goalieBoundingBox);
-        // Check for collision with the goalie
-        if (goalieBoundingBox && ballBoundingBox.intersectsBox(goalieBoundingBox)) {
-            console.log('Collision with goalie detected!');
-            showGoalMissMessage();
-            bounceBack();
-            return;
+          }
         }
 
-        requestAnimationFrame(moveBallForward);
+        document.dispatchEvent(new Event("animateBall"));
+        const event = new CustomEvent("ballAnimationStarted");
+        document.dispatchEvent(event);
+
+        // Play the ball sound when the ball starts moving
+        setTimeout(() => {
+          ballSound.play();
+        }, 400);
+        // Play the whistle sound after 1.5 seconds
+        setTimeout(() => {
+          whistleSound.play();
+        }, 2000); // 1.5 seconds after the ball starts moving
+
+        function moveBallForward() {
+          const extraDistance = 20; // Distance to move beyond the endpoint
+          const finalDistance = distance + extraDistance; // Extended distance
+          if (traveled < finalDistance) {
+            const delta = Math.min(speed, finalDistance - traveled);
+            ballModel.position.addScaledVector(direction, delta);
+            traveled += delta;
+
+            // Rotate the ball
+            const rotationSpeed = 6 * Math.PI; // Double the speed of rotation (radians per second)
+            elapsedTime += (delta / distance) * returnDuration;
+            ballModel.rotation.y += rotationSpeed * (delta / distance);
+
+            // Update the ball's bounding box
+            ballBoundingBox.setFromObject(ballModel);
+            function checkIntersection(object1, object2) {
+    // Compute bounding boxes for both models
+    const box1 = new THREE.Box3().setFromObject(object1);
+    const box2 = new THREE.Box3().setFromObject(object2);
+    
+    // Check intersection between the bounding boxes
+    const isIntersecting = box1.intersectsBox(box2);
+   box1.applyMatrix4(object1.matrixWorld);
+   box2.applyMatrix4(object2.matrixWorld);
+
+    // If intersection is detected, change the color of the goalie model
+    if (isIntersecting) {
+        goalieModel.traverse((child) => {
+            if (child.isMesh) {
+                child.material.color.set(0xff0000); // Set color to red
+            }
+        });
     } else {
-        console.log('Extended destination reached!');
-        showGoalMissMessage();
-        removeLineAndReturnBallToStart();
-    }
-}
-
-function moveBallToZeroYAxisSlowly(speed = 0.2) {
-    function animate() {
-        // Calculate the difference between current y and target y (0)
-        const currentY = ballModel.position.y;
-        const targetY = 1;
-        const deltaY = targetY - currentY;
-
-        // Check if the ball is close enough to the target y position
-        if (Math.abs(deltaY) > 0.01) { // Stop when close enough
-            // Move the ball a small step towards the target
-            ballModel.position.y += Math.sign(deltaY) * Math.min(speed, Math.abs(deltaY));
-
-            // Update the bounding box if needed
-            if (ballBoundingBox) {
-                ballBoundingBox.setFromObject(ballModel);
+        // Reset color when no intersection
+        goalieModel.traverse((child) => {
+            if (child.isMesh) {
+                child.material.color.set(0xffffff); // Reset color to white
             }
-
-            // Request the next frame for smooth animation
-            requestAnimationFrame(animate);
-        } else {
-            // Snap to the exact position at the end
-            ballModel.position.y = targetY;
-
-            if (ballBoundingBox) {
-                ballBoundingBox.setFromObject(ballModel);
-            }
-
-            console.log('Ball has reached the zero y-axis:', ballModel.position);
-        }
+        });
     }
 
-    // Start the animation
-    animate();
+    return isIntersecting;
 }
-
-
-function bounceBack() {
-    const bounceDistance = traveled / 3; // Move back 1/3rd of the distance
-    const bounceSpeed = speed / 12; // Slow down the bounce-back speed
-    const maxVerticalRise = 2; // Maximum vertical rise in units
-    const totalOscillations = 1.90; // Number of upward movements
-    const oscillationFrequency = totalOscillations * 1; // Frequency to match the number of oscillations
-
-    let bounceTraveled = 0;
-
-    function moveBallBackward() {
-        if (bounceTraveled < bounceDistance) {
-            const delta = Math.min(bounceSpeed, bounceDistance - bounceTraveled);
-            ballModel.position.addScaledVector(direction.clone().negate(), delta); // Move back
-            bounceTraveled += delta;
-
-            // Calculate the vertical oscillation
-            const oscillationProgress = (bounceTraveled / bounceDistance) * oscillationFrequency * Math.PI;
-            ballModel.position.y = maxVerticalRise * Math.abs(Math.sin(oscillationProgress)); // Up and down motion
-
-            // Update the ball's bounding box
-            ballBoundingBox.setFromObject(ballModel);
 
             // Move camera with the ball
             updateCameraPosition();
+            const deltagoalie = clock.getDelta();
+            if (goalieMixer) goalieMixer.update(deltagoalie);
 
-            requestAnimationFrame(moveBallBackward);
-        } else {
-            console.log('Bounce-back complete!');
+            // Check for collision with the goal
+            console.log(goalBoundingBox)
+            if (
+              goalBoundingBox &&
+              ballBoundingBox.intersectsBox(goalBoundingBox)
+            ) {
+              console.log("Collision with goal detected!");
+
+              showGoalMessage();
+              GOALSound.play();
+              moveBallToZeroYAxisSlowly();
+              bounceBackgoal();
+              // returnBallToStart();
+              return;
+            }
+            
+            // Check for collision with the goalie
+            goalieModel.updateMatrixWorld(true);
+            
+
+            
+            // if (checkIntersection(ballModel, goalieModel)) {
+            //   console.log("Collision with goalie detected!");
+            //   showGoalMissMessage();
+            //   bounceBack();
+            //   return;
+            // }
+
+
+            console.log(goalieBoundingBoxes, AnimeName)
+            if (
+                goalieBoundingBoxes[AnimeName] &&
+                // goalieBoundingBoxes[AnimeName] !== null &&
+                ballBoundingBox.intersectsBox(goalieBoundingBoxes[AnimeName])
+            //     RightNearBoundingBox &&
+            ) {
+              console.log("Collision with goalie detected!");
+
+              GOALSound.play();
+              showGoalMissMessage();
+              bounceBack();
+             
+              return;
+            }
+
+            requestAnimationFrame(moveBallForward);
+          } else {
+            console.log("Extended destination reached!");
+            showGoalMissMessage();
             removeLineAndReturnBallToStart();
+          }
         }
-    }
 
-    moveBallBackward();
-}
+        function moveBallToZeroYAxisSlowly(speed = 0.2) {
+          function animate() {
+            // Calculate the difference between current y and target y (0)
+            const currentY = ballModel.position.y;
+            const targetY = 1;
+            const deltaY = targetY - currentY;
 
-function bounceBackgoal() {
-    const bounceDistance = traveled / 12; // Move back 1/3rd of the distance
-    const bounceSpeed = speed /20; // Slow down the bounce-back speed
-    const maxVerticalRise = 1; // Maximum vertical rise in units
-    const totalOscillations = 1.9; // Number of upward movements
-    const oscillationFrequency = totalOscillations * 1; // Frequency to match the number of oscillations
+            // Check if the ball is close enough to the target y position
+            if (Math.abs(deltaY) > 0.01) {
+              // Stop when close enough
+              // Move the ball a small step towards the target
+              ballModel.position.y +=
+                Math.sign(deltaY) * Math.min(speed, Math.abs(deltaY));
 
-    let bounceTraveled = 0;
+              // Update the bounding box if needed
+              if (ballBoundingBox) {
+                ballBoundingBox.setFromObject(ballModel);
+              }
 
-    function moveBallBackward() {
-        if (bounceTraveled < bounceDistance) {
-            const delta = Math.min(bounceSpeed, bounceDistance - bounceTraveled);
-            ballModel.position.addScaledVector(direction.clone().negate(), delta); // Move back
-            bounceTraveled += delta;
+              // Request the next frame for smooth animation
+              requestAnimationFrame(animate);
+            } else {
+              // Snap to the exact position at the end
+              ballModel.position.y = targetY;
 
-            // Calculate the vertical oscillation
-            const oscillationProgress = (bounceTraveled / bounceDistance) * oscillationFrequency * Math.PI;
-            ballModel.position.y = maxVerticalRise * Math.abs(Math.sin(oscillationProgress)); // Up and down motion
+              if (ballBoundingBox) {
+                ballBoundingBox.setFromObject(ballModel);
+              }
 
-            // Update the ball's bounding box
-            ballBoundingBox.setFromObject(ballModel);
+              console.log(
+                "Ball has reached the zero y-axis:",
+                ballModel.position
+              );
+            }
+          }
 
-            // Move camera with the ball
-            updateCameraPosition();
-
-            requestAnimationFrame(moveBallBackward);
-        } else {
-            console.log('Bounce-back complete!');
-            removeLineAndReturnBallToStart();
+          // Start the animation
+          animate();
         }
-    }
 
-    setTimeout(() => {
-        moveBallBackward();
-    }, 360);
-}
-let moveCount = 0; // Variable to track the number of movements
+        function bounceBack() {
+          const bounceDistance = traveled / 3; // Move back 1/3rd of the distance
+          const bounceSpeed = speed / 12; // Slow down the bounce-back speed
+          const maxVerticalRise = 2; // Maximum vertical rise in units
+          const totalOscillations = 1.9; // Number of upward movements
+          const oscillationFrequency = totalOscillations * 1; // Frequency to match the number of oscillations
 
-function updateCameraPosition() {
-    // Keep the condition to track the number of movements
-    if (moveCount < 0.1) {
-        // You can still include any logic here for the move count
-        // but not update the camera's position
-        console.log('Move count: ' + moveCount);
+          let bounceTraveled = 0;
 
-        moveCount++; // Increment the move count after each update
-    }
-}
+          function moveBallBackward() {
+            if (bounceTraveled < bounceDistance) {
+              const delta = Math.min(
+                bounceSpeed,
+                bounceDistance - bounceTraveled
+              );
+              ballModel.position.addScaledVector(
+                direction.clone().negate(),
+                delta
+              ); // Move back
+              bounceTraveled += delta;
 
+              // Calculate the vertical oscillation
+              const oscillationProgress =
+                (bounceTraveled / bounceDistance) *
+                oscillationFrequency *
+                Math.PI;
+              ballModel.position.y =
+                maxVerticalRise * Math.abs(Math.sin(oscillationProgress)); // Up and down motion
 
- 
-// Delay ball movement by 2 seconds after line is drawn
-setTimeout(() => {
-    moveBallForward();
-}, 500);
-}
+              // Update the ball's bounding box
+              ballBoundingBox.setFromObject(ballModel);
 
-function removeLineAndReturnBallToStart() {
-    if (line) {
-        scene.remove(line); // Remove the line from the scene
-        line = null; // Set line to null so it won't be drawn again unless a new path is created
-    }
-    setTimeout(returnBallToStart, 100); // Return the ball to start after removing the line
-}
+              // Move camera with the ball
+              updateCameraPosition();
 
-function returnBallToStart() {
-    const targetPosition = new THREE.Vector3(1, 0.4, 29); // Target position for the ball
-    const returnDirection = new THREE.Vector3().subVectors(targetPosition, ballModel.position).normalize();
-    const returnDistance = ballModel.position.distanceTo(targetPosition);
-    let returnTraveled = 0;
+              requestAnimationFrame(moveBallBackward);
+            } else {
+              console.log("Bounce-back complete!");
+              removeLineAndReturnBallToStart();
+            }
+          }
 
-    // Function to move the ball back quickly (0.1 seconds)
-    function moveBallBack() {
-        camera.position.x = ballModel.position.x + cameraOffset.x;
-        camera.position.z = ballModel.position.z + cameraOffset.z;
-        camera.position.y = ballModel.position.y + cameraOffset.y;
-        camera.lookAt(ballModel.position);
+          moveBallBackward();
+        }
 
+        function bounceBackgoal() {
+          const bounceDistance = traveled / 12; // Move back 1/3rd of the distance
+          const bounceSpeed = speed / 20; // Slow down the bounce-back speed
+          const maxVerticalRise = 1; // Maximum vertical rise in units
+          const totalOscillations = 1.9; // Number of upward movements
+          const oscillationFrequency = totalOscillations * 1; // Frequency to match the number of oscillations
 
-        if (returnTraveled < returnDistance) {
-            const delta = Math.min(returnDistance, returnDistance * (1 / returnDuration)); // Speed up the return
+          let bounceTraveled = 0;
+
+          function moveBallBackward() {
+            if (bounceTraveled < bounceDistance) {
+              const delta = Math.min(
+                bounceSpeed,
+                bounceDistance - bounceTraveled
+              );
+              ballModel.position.addScaledVector(
+                direction.clone().negate(),
+                delta
+              ); // Move back
+              bounceTraveled += delta;
+
+              // Calculate the vertical oscillation
+              const oscillationProgress =
+                (bounceTraveled / bounceDistance) *
+                oscillationFrequency *
+                Math.PI;
+              ballModel.position.y =
+                maxVerticalRise * Math.abs(Math.sin(oscillationProgress)); // Up and down motion
+
+              // Update the ball's bounding box
+              ballBoundingBox.setFromObject(ballModel);
+
+              // Move camera with the ball
+              updateCameraPosition();
+
+              requestAnimationFrame(moveBallBackward);
+            } else {
+              console.log("Bounce-back complete!");
+              removeLineAndReturnBallToStart();
+            }
+          }
+
+          setTimeout(() => {
+            moveBallBackward();
+          }, 360);
+        }
+        let moveCount = 0; // Variable to track the number of movements
+
+        function updateCameraPosition() {
+          // Keep the condition to track the number of movements
+          if (moveCount < 0.1) {
+            // You can still include any logic here for the move count
+            // but not update the camera's position
+            console.log("Move count: " + moveCount);
+
+            moveCount++; // Increment the move count after each update
+          }
+        }
+
+        // Delay ball movement by 2 seconds after line is drawn
+        setTimeout(() => {
+          moveBallForward();
+        }, 500);
+      }
+
+      function removeLineAndReturnBallToStart() {
+        if (line) {
+          scene.remove(line); // Remove the line from the scene
+          line = null; // Set line to null so it won't be drawn again unless a new path is created
+        }
+        setTimeout(returnBallToStart, 100); // Return the ball to start after removing the line
+      }
+
+      function returnBallToStart() {
+        const targetPosition = new THREE.Vector3(1, 0.4, 29); // Target position for the ball
+        const returnDirection = new THREE.Vector3()
+          .subVectors(targetPosition, ballModel.position)
+          .normalize();
+        const returnDistance = ballModel.position.distanceTo(targetPosition);
+        let returnTraveled = 0;
+
+        // Function to move the ball back quickly (0.1 seconds)
+        function moveBallBack() {
+          camera.position.x = ballModel.position.x + cameraOffset.x;
+          camera.position.z = ballModel.position.z + cameraOffset.z;
+          camera.position.y = ballModel.position.y + cameraOffset.y;
+          camera.lookAt(ballModel.position);
+
+          if (returnTraveled < returnDistance) {
+            const delta = Math.min(
+              returnDistance,
+              returnDistance * (1 / returnDuration)
+            ); // Speed up the return
             ballModel.position.addScaledVector(returnDirection, delta);
             returnTraveled += delta;
             requestAnimationFrame(moveBallBack);
-        } else {
+          } else {
             ballModel.position.copy(targetPosition);
-            console.log('Ball returned to the target position!');
+            console.log("Ball returned to the target position!");
+          }
         }
-    }
 
-    moveBallBack();
+        moveBallBack();
 
-
-            window.addEventListener('resize', onWindowResize, false);
-        }
-        function loadCrowd1Model(loader, positionX, positionY, positionZ, animationName) {
-            loader.load(
-                'crowd1.glb',
-                (gltf) => {
-                    const crowdModel = gltf.scene;
-                    crowdModel.scale.set(4.5, 3.5, 4.5);
-                    crowdModel.position.set(positionX, positionY, positionZ);
-                    scene.add(crowdModel);
-                    crowdModel.traverse((child) => {
-            if (child.isMesh) {
+        window.addEventListener("resize", onWindowResize, false);
+      }
+      function loadCrowd1Model(
+        loader,
+        positionX,
+        positionY,
+        positionZ,
+        animationName
+      ) {
+        loader.load(
+          "crowd1.glb",
+          (gltf) => {
+            const crowdModel = gltf.scene;
+            crowdModel.scale.set(4.5, 3.5, 4.5);
+            crowdModel.position.set(positionX, positionY, positionZ);
+            scene.add(crowdModel);
+            crowdModel.traverse((child) => {
+              if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-            }
-        });  
-                    const mixer = new THREE.AnimationMixer(crowdModel);
-                    mixers.push(mixer); // Add mixer to the global array
+              }
+            });
+            const mixer = new THREE.AnimationMixer(crowdModel);
+            mixers.push(mixer); // Add mixer to the global array
 
-                    // Debug: Log available animations
-                    console.log('Available Animations:', gltf.animations.map((anim) => anim.name));
-
-                    // Play specified animation
-                    playAnimation(mixer, gltf.animations, animationName);
-                },
-                undefined,
-                (error) => {
-                    console.error('Error loading crowd model:', error);
-                }
+            // Debug: Log available animations
+            console.log(
+              "Available Animations:",
+              gltf.animations.map((anim) => anim.name)
             );
+
+            // Play specified animation
+            playAnimation(mixer, gltf.animations, animationName);
+          },
+          undefined,
+          (error) => {
+            console.error("Error loading crowd model:", error);
+          }
+        );
+      }
+
+      function loadedCrowdModel(
+        loader,
+        positionX,
+        positionY,
+        positionZ,
+        animationName
+      ) {
+        loader.load(
+          "crowd2.glb",
+          (gltf) => {
+            const crowdModel = gltf.scene;
+            crowdModel.scale.set(4.5, 3.5, 4.5);
+            crowdModel.position.set(positionX, positionY, positionZ);
+            scene.add(crowdModel);
+            crowdModel.traverse((child) => {
+              if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+              }
+            });
+            const mixer = new THREE.AnimationMixer(crowdModel);
+            mixers.push(mixer); // Add mixer to the global array
+
+            // Debug: Log available animations
+            console.log(
+              "Available Animations:",
+              gltf.animations.map((anim) => anim.name)
+            );
+
+            // Play specified animation
+            playAnimation(mixer, gltf.animations, animationName);
+          },
+          undefined,
+          (error) => {
+            console.error("Error loading crowd model:", error);
+          }
+        );
+      }
+      function loadCrowdModel(
+        loader,
+        positionX,
+        positionY,
+        positionZ,
+        animationName
+      ) {
+        loader.load(
+          "crowd3.glb",
+          (gltf) => {
+            const crowdModel = gltf.scene;
+            crowdModel.scale.set(4.5, 3.5, 4.5);
+            crowdModel.position.set(positionX, positionY, positionZ);
+            scene.add(crowdModel);
+            crowdModel.traverse((child) => {
+              if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+              }
+            });
+            const mixer = new THREE.AnimationMixer(crowdModel);
+            mixers.push(mixer); // Add mixer to the global array
+
+            // Debug: Log available animations
+            console.log(
+              "Available Animations:",
+              gltf.animations.map((anim) => anim.name)
+            );
+
+            // Play specified animation
+            playAnimation(mixer, gltf.animations, animationName);
+          },
+          undefined,
+          (error) => {
+            console.error("Error loading crowd model:", error);
+          }
+        );
+      }
+      function playAnimation(mixer, animations, animationName) {
+        const clip = THREE.AnimationClip.findByName(animations, animationName);
+        if (clip) {
+          const action = mixer.clipAction(clip);
+          mixer.stopAllAction(); // Stop all other actions
+          action.reset().setLoop(THREE.LoopRepeat, Infinity).play();
+        } else {
+          console.warn(`Animation "${animationName}" not found.`);
+        }
+      }
+      function onWindowResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+      let isAnimationPaused = false; // State variable to track if animation is paused
+
+      // Function to pause the animation and show the modal
+      document.querySelector("#centerButton").addEventListener("click", () => {
+        isAnimationPaused = true; // Pause animation
+        document.querySelector("#settingsModal1").style.display = "block"; // Show modal
+      });
+
+      // Function to play animation when "close" button is clicked
+      document.querySelector("#close-modal").addEventListener("click", () => {
+        isAnimationPaused = false; // Resume animation
+        document.querySelector("#settingsModal1").style.display = "none"; // Hide modal
+      });
+
+    //   function createBoundingBox(model, color, x, y, z, width, height, depth, animName) {
+    //       const geometry = new THREE.BoxGeometry(width, height, depth); // Bounding box size
+    //       const material = new THREE.MeshBasicMaterial({
+    //         color: color,
+    //         wireframe: true,
+    //       });
+    //       const boundingBox = new THREE.Mesh(geometry, material);
+          
+    //       // Set the position of the bounding box relative to the model
+    //       boundingBox.position.set(x, y, z);
+    //       scene.add(boundingBox);
+    //       goalieBoundingBoxHelpers.push(boundingBox); // Add to the array
+    //       goalieBoundingBoxes[animName] = boundingBox;
+    //     }
+    function createBoundingBox(model, x, y, z, width, height, depth, animName) {
+    // Create a Box3 instance
+    const boundingBox = new THREE.Box3();
+
+    // Set Box3 boundaries based on dimensions
+    boundingBox.setFromCenterAndSize(
+        new THREE.Vector3(x, y, z), // Center position
+        new THREE.Vector3(width, height, depth) // Size
+    );
+
+    // Store in the goalieBoundingBoxes map for logical usage
+    goalieBoundingBoxes[animName] = boundingBox;
+
+    // Skip adding any visual representation to keep it invisible
+    // If you need visual representation for debugging, you can uncomment the following:
+    /*
+    const helperGeometry = new THREE.BoxGeometry(width, height, depth);
+    const material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        wireframe: true,
+        visible: false // Set visible to false if helper is not needed
+    });
+    const helperMesh = new THREE.Mesh(helperGeometry, material);
+    helperMesh.position.set(x, y, z);
+    scene.add(helperMesh);
+    goalieBoundingBoxHelpers.push(helperMesh);
+    */
+
+    return boundingBox; // Return the Box3 for further use
+}
+    
+        // Function to update all bounding boxes during animation
+        function updateBoundingBoxes() {
+          if (goalieBoundingBoxHelpers.length > 0) {
+            goalieBoundingBoxHelpers.forEach((box) => {
+          
+            });
+          }
+        }
+    
+      function animate() {
+        requestAnimationFrame(animate);
+
+        const delta = clock.getDelta(); // Time between frames
+
+        // Update all mixers, including striker's mixer
+        if (!isAnimationPaused) {
+          mixers.forEach((mixer) => mixer.update(delta)); // Update mixers only if not paused
         }
         
-        function loadedCrowdModel(loader, positionX, positionY, positionZ, animationName) {
-            loader.load(
-                'crowd2.glb',
-                (gltf) => {
-                    const crowdModel = gltf.scene;
-                    crowdModel.scale.set(4.5, 3.5, 4.5);
-                    crowdModel.position.set(positionX, positionY, positionZ);
-                    scene.add(crowdModel);
-                    crowdModel.traverse((child) => {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        });
-                    const mixer = new THREE.AnimationMixer(crowdModel);
-                    mixers.push(mixer); // Add mixer to the global array
+        camera.position.y = 6;
+        camera.position.z = 35;
+        renderer.render(scene, camera);
+      }
 
-                    // Debug: Log available animations
-                    console.log('Available Animations:', gltf.animations.map((anim) => anim.name));
-
-                    // Play specified animation
-                    playAnimation(mixer, gltf.animations, animationName);
-                },
-                undefined,
-                (error) => {
-                    console.error('Error loading crowd model:', error);
-                }
-            );
-        }
-        function loadCrowdModel(loader, positionX, positionY, positionZ, animationName) {
-            loader.load(
-                'crowd3.glb',
-                (gltf) => {
-                    const crowdModel = gltf.scene;
-                    crowdModel.scale.set(4.5, 3.5, 4.5);
-                    crowdModel.position.set(positionX, positionY, positionZ);
-                    scene.add(crowdModel);
-                    crowdModel.traverse((child) => {
-            if (child.isMesh) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        });
-                    const mixer = new THREE.AnimationMixer(crowdModel);
-                    mixers.push(mixer); // Add mixer to the global array
-
-                    // Debug: Log available animations
-                    console.log('Available Animations:', gltf.animations.map((anim) => anim.name));
-
-                    // Play specified animation
-                    playAnimation(mixer, gltf.animations, animationName);
-                },
-                undefined,
-                (error) => {
-                    console.error('Error loading crowd model:', error);
-                }
-            );
-            
-        }
-        function playAnimation(mixer, animations, animationName) {
-            const clip = THREE.AnimationClip.findByName(animations, animationName);
-            if (clip) {
-                const action = mixer.clipAction(clip);
-                mixer.stopAllAction(); // Stop all other actions
-                action.reset().setLoop(THREE.LoopRepeat, Infinity).play();
-            } else {
-                console.warn(`Animation "${animationName}" not found.`);
-            }
-        } 
-       function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-        let isAnimationPaused = false; // State variable to track if animation is paused
-
-// Function to pause the animation and show the modal
-document.querySelector('#centerButton').addEventListener('click', () => {
-    isAnimationPaused = true; // Pause animation
-    document.querySelector('#settingsModal1').style.display = 'block'; // Show modal
-});
-
-// Function to play animation when "close" button is clicked
-document.querySelector('#close-modal').addEventListener('click', () => {
-    isAnimationPaused = false; // Resume animation
-    document.querySelector('#settingsModal1').style.display = 'none'; // Hide modal
-});
-        function animate() {
-    requestAnimationFrame(animate);
-
-    const delta = clock.getDelta();  // Time between frames
-  
-    // Update all mixers, including striker's mixer
-    if (!isAnimationPaused) {
-        mixers.forEach((mixer) => mixer.update(delta)); // Update mixers only if not paused
-    }
-   
-    camera.position.y = 6;
-    camera.position.z = 35;
-    renderer.render(scene, camera);
-}
-
-        init();
-        animate();
+      init();
+      animate();
     </script>
-       <script src="game.js"></script>
-</body>
+    <script src="game.js"></script>
+  </body>
 </html>

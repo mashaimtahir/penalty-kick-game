@@ -40,11 +40,13 @@
         }
 
         #titleImage {
-            height: 100px;
-            width: 350px;
+            height: 25%;
+            width: 12%;
             animation: moveFromTop 1s ease-out forwards;
             z-index: 2;
             left: 50%;
+            
+            bottom: 100px;
             transform: translateX(-50%);
             position: absolute;
         }
@@ -101,7 +103,7 @@
 }
 
 .btn-one {
-  color: #FFF;
+  color: white;
   transition: all 0.3s;
   position: relative;
   font-size: 30px;
@@ -123,12 +125,14 @@
   border-bottom-width: 1px;
   border-top-style: solid;
   border-bottom-style: solid;
-  border-top-color: rgba(255,255,255,0.5);
-  border-bottom-color: rgba(255,255,255,0.5);
+  border-top-color: rgba(124, 122, 122, 0.5);
+  border-bottom-color: rgba(124, 124, 124, 0.5);
   transform: scale(0.1, 1);
 }
 .btn-one:hover span {
   letter-spacing: 2px;
+  color: black;
+
 }
 .btn-one:hover::before {
   opacity: 1; 
@@ -143,11 +147,12 @@
   height: 100%;
   z-index: 1;
   transition: all 0.3s;
-  background-color: rgba(255, 255, 255, 0.321);
+  background-color: rgba(30, 30, 30, 0.4);
 }
 .btn-one:hover::after {
   opacity: 0; 
   transform: scale(0.1, 1);
+  background-color: rgba(228, 227, 227, 0.4);
 }
 
  
@@ -256,6 +261,102 @@
     
 
 }
+
+/* Adjusting the container width and height for smaller screens */
+@media (max-width: 1024px) {
+    .Game {
+        height: 100%;
+        width: 100%;
+        flex-direction: column;
+        padding: 20px;
+    }
+    #titleImage {
+        width: 250px;
+        height: 90px;
+    }
+    #settingImage {
+        width: 60px;
+        height: 60px;
+        left: 90%;
+        top: 15px;
+    }
+}
+
+/* For tablets and smaller screens */
+@media (max-width: 768px) {
+    #titleImage {
+        width: 200px;
+        height: 70px;
+    }
+    #settingImage {
+        width: 50px;
+        height: 50px;
+        left: 85%;
+        top: 10px;
+    }
+    .btn {
+        width: 200px;
+        height: 50px;
+        font-size: 28px;
+    }
+    .btn-one {
+        font-size: 24px;
+    }
+    .SETTINGS, .LEVELS {
+        font-size: 30px;
+    }
+}
+
+/* For mobile screens */
+@media (max-width: 576px) {
+    #titleImage {
+        width: 150px;
+        height: 60px;
+    }
+    #settingImage {
+        width: 45px;
+        height: 45px;
+        left: 80%;
+        top: 8px;
+    }
+    .btn {
+        width: 180px;
+        height: 45px;
+        font-size: 24px;
+    }
+    .btn-one {
+        font-size: 20px;
+    }
+    .SETTINGS, .LEVELS {
+        font-size: 28px;
+    }
+}
+
+/* For very small mobile screens */
+@media (max-width: 320px) {
+    #titleImage {
+        width: 120px;
+        height: 50px;
+    }
+    #settingImage {
+        width: 40px;
+        height: 40px;
+        left: 75%;
+        top: 5px;
+    }
+    .btn {
+        width: 150px;
+        height: 40px;
+        font-size: 20px;
+    }
+    .btn-one {
+        font-size: 18px;
+    }
+    .SETTINGS, .LEVELS {
+        font-size: 24px;
+    }
+}
+
 /* From Uiverse.io by Nawsome */ 
 label, .bubble {
   display: block;
@@ -531,12 +632,29 @@ label {
   outline-color: red;
 }
 
+@media screen and (max-width: 768px) {
+    #one{
+        display: flex;
+        position: relative; /* Add position relative */
+        margin-left: -100px; /* Now left will work */
+        top: -330px;
+    }
+     #two{
+        display: flex;
+        position: relative; /* Add position relative */
+        margin-left: -900px; /* Now left will work */
+        top: -330px;
+    }
+
+}
+
+
     </style>
 </head>
 <body>
     <div class="Game">
-        <div class="G1"><img src="pics/SoocerGame.webp" alt="Background Image"></div>
-        <!-- <img id="titleImage" src="pics/title.png" alt="Title Image"> -->
+        <div class="G1"><img src="pics/mainBG.jpg" alt="Background Image"></div>
+        <img id="titleImage" src="pics/MAINPAGELOGO.png" alt="Title Image">
          
         
 
@@ -551,17 +669,10 @@ label {
                     </label>
                   </div>
                   
-                  <audio id="backgroundAudio" src="pics/bgm.mp3" preload="auto" loop></audio>
+                  <audio id="backgroundAudio" src="pics/fb-crowd.mp3" preload="auto" loop></audio>
                   
                   
-<!--                   
-                  <div style="width:100%; color: white; font-size: 20px; margin-right: 90px; display: flex; justify-content: center; align-items: center; gap: 53px;">
-                    Voice:
-                    <label>
-                      <input value="on" name="dummy" type="checkbox" class="bubble">
-                    </label>
-                  </div>
-                   -->
+
                
                   <button id="close-modal" class="close-button">&times;</button>
                  
@@ -572,10 +683,10 @@ label {
         <div class="content">
           <div class="buttons">
               <div id="one" class="button">
-                  <img class="clickable-image" src="pics/setting.png" alt="Settings Button" style="height: 70px; width: 70px; position: absolute; left: 94%; top: 0px;">
+                  <img class="clickable-image" id="IMG1" src="pics/setting.png" alt="Settings Button" style="height: 70px; width: 70px; position: absolute; left: 94%; top: 0px;">
               </div>
               <div id="two" class="button">
-                  <img class="clickable-image" src="pics/game-controller.png" alt="Levels Button" style="height: 70px; width: 70px; position: absolute; left: 89%; top: 0px;">
+                  <img class="clickable-image" id="" src="pics/game-controller.png" alt="Levels Button" style="height: 70px; width: 70px; position: absolute; left: 89%; top: 0px;">
               </div>
           </div>
       </div>
@@ -622,8 +733,10 @@ label {
     </div>
     
     <div class="btn btn-one" id="play" onclick="loadPage()">
-        <span>PLAY</span>
+        <span style="position: relative; z-index: 10;">PLAY</span>
     </div>
+    <!-- <audio id="audio1" src="pics/fb-crowd.mp3.mp3" loop></audio> -->
+    <!-- <button id="controlButton" style="display: flex; width: 200px; height: 200px; background-color: red; position: absolute; z-index: 10;">Play</button> -->
     
     
      
@@ -668,16 +781,29 @@ closeLevelButton.addEventListener('click', () => {
     images.forEach(img => (img.style.display = 'block'));
     playBTN.style.display = 'block'; // Show the play button
 });
-     
-        const audio = document.getElementById('backgroundAudio');
+const audio = document.getElementById('backgroundAudio');
   const checkbox = document.getElementById('audioCheckbox');
+
+  // Load the state of the checkbox from localStorage when the page loads
+  window.addEventListener('load', () => {
+    const audioState = localStorage.getItem('audioState');
+    if (audioState === 'on') {
+      checkbox.checked = true;
+      audio.play();
+    } else {
+      checkbox.checked = false;
+      audio.pause();
+    }
+  });
 
   // Event listener to toggle audio play/pause when the checkbox is checked/unchecked
   checkbox.addEventListener('change', function () {
     if (checkbox.checked) {
       audio.play(); // Play audio when checkbox is checked
+      localStorage.setItem('audioState', 'on'); // Save the state to localStorage
     } else {
       audio.pause(); // Pause audio when checkbox is unchecked
+      localStorage.setItem('audioState', 'off'); // Save the state to localStorage
     }
   });
 
@@ -794,6 +920,43 @@ closeLevelButton.addEventListener('click', () => {
             }
         });
 
+
+        const audio1 = document.getElementById('audio1');
+    const button = document.getElementById('controlButton');
+
+    // Set initial state based on localStorage
+    const audioState = localStorage.getItem('audioState') || 'paused';
+    if (audioState === 'playing') {
+      audio1.play();
+      button.textContent = 'Pause';
+    } else {
+      button.textContent = 'Play';
+    }
+
+    button.addEventListener('click', () => {
+      if (audio1.paused) {
+        audio1.play();
+        localStorage.setItem('audioState', 'playing');
+        button.textContent = 'Pause';
+      } else {
+        audio1.pause();
+        localStorage.setItem('audioState', 'paused');
+        button.textContent = 'Play';
+      }
+    });
+
+    // Listen for storage events to sync across tabs/pages
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'audioState') {
+        if (e.newValue === 'playing') {
+          audio1.play();
+          button.textContent = 'Pause';
+        } else {
+          audio1.pause();
+          button.textContent = 'Play';
+        }
+      }
+    });
 
     </script>
 </body>

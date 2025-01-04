@@ -361,3 +361,163 @@ background-color: #354285;
     
 
 }
+
+
+
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #Kicks {
+        font-size: 16px; /* Smaller font size on smaller screens */
+        padding: 3px 5px;
+        position: absolute;
+        left: -48px;
+        top: -25px;
+    }
+}
+
+@media (max-width: 576px) {
+    #Kicks {
+        font-size: 14px; /* Even smaller font size on very small screens */
+        padding: 2px 4px;
+        position: absolute;
+        left: -56px;
+        top: -25px;
+    }
+}
+
+@media (max-width: 320px) {
+    #Kicks {
+        font-size: 12px; /* Smallest font size */
+        padding: 2px 3px;
+    }
+}
+
+
+/* Mobile/Tablet (Max 768px) */
+@media (max-width: 768px) {
+    #canvas-container {
+        width: 100%;
+        height: 50vh; /* Adjust height for smaller screens */
+    }
+    #canvas-container2 {
+        width: 100%;
+        height: 8vh;
+    }
+    #centerButton {
+        top: 5%;
+        left: 90%;
+        height: 50px;
+        width: 50px;
+    }
+    #scoreButton {
+        top: 5%;
+        left: 5%;
+        height: 45px;
+        width: 170px;
+    }
+    #livesButton {
+        top: 15%;
+        left: 5%;
+        height: 70px;
+        width: 70px;
+    }
+    .scoreCount {
+        font-size: 30px;
+        top: -15px;
+        left: 20px;
+    }
+    .stadium-strip {
+        height: 12vh; /* Adjust height for mobile */
+    }
+    .modal-content1 {
+        width: 250px;
+        height: 220px;
+        padding: 15px;
+    }
+    .modal-content2 {
+        width: 250px;
+        height: 300px;
+    }
+    .leveldiv2 {
+        font-size: 30px;
+    }
+    .gameEND {
+        font-size: 16px;
+    }
+    .loader {
+        width: 80px;
+        height: 20px;
+    }
+    .leveldiv {
+        font-size: 30px;
+    }
+}
+
+/* Small Devices (Max 480px) */
+@media (max-width: 480px) {
+    #canvas-container {
+        height: 40vh; /* Further reduce height for smaller devices */
+    }
+    #centerButton {
+        top: 5%;
+        left: 85%;
+        height: 45px;
+        width: 45px;
+    }
+    #scoreButton {
+        top: 5%;
+        left: 3%;
+        height: 40px;
+        width: 150px;
+    }
+    #livesButton {
+        top: 12%;
+        left: 3%;
+        height: 60px;
+        width: 60px;
+    }
+    .scoreCount {
+        font-size: 25px;
+        top: -100px;
+        left: 15px;
+    }
+    #score{
+        
+    }
+    .stadium-strip {
+        height: 14vh;
+    }
+    .modal-content1 {
+        width: 220px;
+        height: 200px;
+        padding: 10px;
+    }
+    .modal-content2 {
+        width: 220px;
+        height: 280px;
+    }
+    .leveldiv2 {
+        font-size: 24px;
+    }
+    .gameEND {
+        font-size: 14px;
+    }
+    .loader {
+        width: 60px;
+        height: 18px;
+    }
+    .leveldiv {
+        font-size: 24px;
+    }
+}
+
+/* Additional Customizations for larger screens if necessary */
+@media (min-width: 1200px) {
+    #canvas-container {
+        height: 80vh; /* Increase height for larger screens */
+    }
+    .scoreCount {
+        font-size: 40px;
+    }
+}
