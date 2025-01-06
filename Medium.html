@@ -337,37 +337,54 @@ scene.add(imageMesh1, imageMesh2, imageMesh3);
             gltfLoader.setDRACOLoader(dracoLoader);
 
             
-
             gltfLoader.load(
-                'goal.glb',
-                function (gltf) {
-					const goalPartModel = gltf.scene;
+    'goal.glb',
+    function (gltf) {
+        const goalPartModel = gltf.scene;
         goalPartModel.scale.set(1.4, 1.3, 1); // Adjust scale if needed
-        goalPartModel.position.set(0, 0, 8);  // Move behind the goal
-                    scene.add(goalPartModel);
-                    goalPartModel.rotation.set(-0.5, 0, 0);
-      
-   // Traverse the model and change the material color to white
-   goalPartModel.traverse((child) => {
+        goalPartModel.position.set(0, 0, 8); // Move behind the goal
+        goalPartModel.rotation.set(-0.5, 0, 0); // Apply rotation to the model
+
+        scene.add(goalPartModel);
+
+        // Traverse the model and change the material color to white
+        goalPartModel.traverse((child) => {
             if (child.isMesh) {
                 child.material = new THREE.MeshBasicMaterial({ color: 0xffffff }); // Set material to white
             }
         });
-                    // Initialize goal bounding box
-                    goalBoundingBox = new THREE.Box3().setFromObject(goalPartModel);
-                    // drawBoundingBox(goalBoundingBox, 0x0000ff);  
-                },
-                undefined,
-                function (error) {
-                    console.error('An error occurred with the goal model:', error);
-                }
-            );
-            function drawBoundingBox(box, color) {
-            const boxHelper = new THREE.Box3Helper(box, color);
-            scene.add(boxHelper);
-        }
-       
 
+        // Initialize goal bounding box
+        goalBoundingBox = new THREE.Box3().setFromObject(goalPartModel);
+
+        // Scale down the bounding box by adjusting min and max values
+        const scaleFactor = 0.95; // Adjust this value to make it smaller or larger
+        const size = goalBoundingBox.getSize(new THREE.Vector3());
+        const center = goalBoundingBox.getCenter(new THREE.Vector3());
+
+        goalBoundingBox.min.set(
+            center.x - (size.x * scaleFactor) / 2,
+            center.y - (size.y * scaleFactor) / 2,
+            center.z - (size.z * scaleFactor) / 2
+        );
+        goalBoundingBox.max.set(
+            center.x + (size.x * scaleFactor) / 2,
+            center.y + (size.y * scaleFactor) / 3,
+            center.z + (size.z * scaleFactor) / 2
+        );
+
+        // Create a Box3Helper for visualization
+        // const boxHelper = new THREE.Box3Helper(goalBoundingBox, 0x0000ff);
+        scene.add(boxHelper);
+
+        // Apply the model's rotation to the box helper
+        boxHelper.rotation.copy(goalPartModel.rotation);
+    },
+    undefined,
+    function (error) {
+        console.error('An error occurred with the goal model:', error);
+    }
+);
 
 
             // Load the stadium model (stadium-part.glb)
@@ -937,6 +954,19 @@ gltfLoader.load(
                 }
             );
 
+            window.addEventListener('touchmove', onTouchMove);
+window.addEventListener('touchstart', onTouchStart);
+window.addEventListener('touchend', onTouchEnd);
+
+window.addEventListener('touchend', (event) => {
+                if (animationDirection === 'left') {
+                    document.dispatchEvent(new Event('animateBallLeft'));
+                    // left = false;
+                } else if (animationDirection === 'right') {
+                    document.dispatchEvent(new Event('animateBallRight'));
+                    // right = false;
+                } 
+            });	
             // Handle mouse events to draw path
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mousedown', onMouseDown);
@@ -1032,6 +1062,83 @@ function onMouseMove(event) {
     }
 }
 
+// let drawingPath = false;
+let previousTouchX = 0; // Variable to store the previous touch position
+// let animationDirection = '';
+
+function onTouchMove(event) {
+    if (!drawingPath) return;
+
+    // Get touch position in normalized device coordinates (-1 to +1) for both components
+    let touch = new THREE.Vector2();
+    touch.x = (event.touches[0].clientX / window.innerWidth) * 2 - 1;
+    touch.y = -(event.touches[0].clientY / window.innerHeight) * 2 + 1;
+
+    // Detect left or right movement
+    if (event.touches[0].clientX < previousTouchX) {
+        console.log('touch moving left...');
+        animationDirection = 'left';
+    } else if (event.touches[0].clientX > previousTouchX) {
+        console.log('touch moving right...');
+        animationDirection = 'right';
+    } else {
+        animationDirection = '';
+    }
+
+    // Update the previous touch X position
+    previousTouchX = event.touches[0].clientX;
+
+    // Log the direction (left or right)
+
+    let raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(touch, camera);
+
+    // Create an array of planes
+    const planes = [
+        new THREE.Plane(new THREE.Vector3(0, 1, 0.05), 0),
+        new THREE.Plane(new THREE.Vector3(0, 1, 0.15), 0),
+        new THREE.Plane(new THREE.Vector3(0, 1, 0.25), 0),
+    ];
+
+    // Select a random plane from the array
+    const randomIndex = Math.floor(Math.random() * planes.length);
+    const plane = planes[randomIndex];
+
+    const intersection = new THREE.Vector3();
+    raycaster.ray.intersectPlane(plane, intersection);
+
+    // Add the intersection point to the path
+    pathPoints.push(intersection);
+
+    // Draw the line while drawing the path
+    updatePathCurve();
+    if (!line) {
+        const material = new THREE.LineBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.5 // Adjust this value between 0 (fully transparent) and 1 (fully opaque)
+        });
+
+        const geometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
+        line = new THREE.Line(geometry, material);
+        scene.add(line);
+    } else {
+        line.geometry.setFromPoints(pathPoints);
+    }
+}
+
+// Add event listeners for touch events
+window.addEventListener('touchstart', (event) => {
+    drawingPath = true;
+    previousTouchX = event.touches[0].clientX; // Initialize the previous touch position
+});
+
+window.addEventListener('touchmove', onTouchMove);
+
+window.addEventListener('touchend', () => {
+    drawingPath = false;
+});
+
 function onMouseDown(event) {
     // Start drawing the path when the mouse is pressed
     previousMouseX = event.clientX;
@@ -1049,11 +1156,29 @@ function onMouseUp() {
     }
 }
 
+function onTouchStart(event) {
+  event.preventDefault(); // Prevent scrolling or gestures
+  pathPoints = []; // Clear the previous path
+  drawingPath = true;
+}
+
+
+function onTouchEnd() {
+  drawingPath = false;
+  if (pathPoints.length > 1) {
+    animateBall();
+  }
+}
+
+
 function updatePathCurve() {
     if (pathPoints.length > 1) {
         pathCurve = new THREE.CatmullRomCurve3(pathPoints);
     }
 }
+
+
+
 
   
 function displayGameOver() {

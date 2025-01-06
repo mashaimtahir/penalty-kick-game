@@ -374,38 +374,56 @@ scene.add(imageMesh1, imageMesh2, imageMesh3);
         // Load crowd models
         const gltfLoader = new GLTFLoader();
         gltfLoader.setDRACOLoader(dracoLoader);
-
         gltfLoader.load(
-          "goal.glb",
-          function (gltf) {
-            const goalPartModel = gltf.scene;
-            goalPartModel.scale.set(1.4, 1.3, 1); // Adjust scale if needed
-            goalPartModel.position.set(0, 0, 8); // Move behind the goal
-            scene.add(goalPartModel);
-            goalPartModel.rotation.set(-0.5, 0, 0);
+    'goal.glb',
+    function (gltf) {
+        const goalPartModel = gltf.scene;
+        goalPartModel.scale.set(1.4, 1.3, 1); // Adjust scale if needed
+        goalPartModel.position.set(0, 0, 8); // Move behind the goal
+        goalPartModel.rotation.set(-0.5, 0, 0); // Apply rotation to the model
 
-            // Traverse the model and change the material color to white
-            goalPartModel.traverse((child) => {
-              if (child.isMesh) {
-                child.material = new THREE.MeshBasicMaterial({
-                  color: 0xffffff,
-                }); // Set material to white
-              }
-            });
-            // Initialize goal bounding box
-            goalBoundingBox = new THREE.Box3().setFromObject(goalPartModel);
-            // drawBoundingBox(goalBoundingBox, 0x0000ff);
-          },
-          undefined,
-          function (error) {
-            console.error("An error occurred with the goal model:", error);
-          }
+        scene.add(goalPartModel);
+
+        // Traverse the model and change the material color to white
+        goalPartModel.traverse((child) => {
+            if (child.isMesh) {
+                child.material = new THREE.MeshBasicMaterial({ color: 0xffffff }); // Set material to white
+            }
+        });
+
+        // Initialize goal bounding box
+        goalBoundingBox = new THREE.Box3().setFromObject(goalPartModel);
+
+        // Scale down the bounding box by adjusting min and max values
+        const scaleFactor = 0.95; // Adjust this value to make it smaller or larger
+        const size = goalBoundingBox.getSize(new THREE.Vector3());
+        const center = goalBoundingBox.getCenter(new THREE.Vector3());
+
+        goalBoundingBox.min.set(
+            center.x - (size.x * scaleFactor) / 2,
+            center.y - (size.y * scaleFactor) / 2,
+            center.z - (size.z * scaleFactor) / 2
         );
-        function drawBoundingBox(box, color) {
-          const boxHelper = new THREE.Box3Helper(box, color);
-          scene.add(boxHelper);
-        }
-        
+        goalBoundingBox.max.set(
+            center.x + (size.x * scaleFactor) / 2,
+            center.y + (size.y * scaleFactor) / 3,
+            center.z + (size.z * scaleFactor) / 2
+        );
+
+        // Create a Box3Helper for visualization
+        // const boxHelper = new THREE.Box3Helper(goalBoundingBox, 0x0000ff);
+        scene.add(boxHelper);
+
+        // Apply the model's rotation to the box helper
+        boxHelper.rotation.copy(goalPartModel.rotation);
+    },
+    undefined,
+    function (error) {
+        console.error('An error occurred with the goal model:', error);
+    }
+);
+
+
      
         // Load the goalie model
         gltfLoader.load(
